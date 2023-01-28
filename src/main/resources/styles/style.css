@@ -1,0 +1,19 @@
+.button {
+    -fx-pref-width: 250;
+    -fx-pref-height: 60;
+    -fx-font-family: 'Georgia Bold';
+    -fx-font-size: 20;
+    -fx-background-color:#999999;
+    -fx-border-color:#0099cc;
+    -fx-border-width: 5px;
+    -fx-background-insets: 2 2 2 2;
+    -fx-effect: dropshadow(three-pass-box, black, 4, 1, 2, 4);
+}
+
+.toggledButton {
+    -fx-background-color:white;
+    -fx-effect: null;
+    -fx-translate-x:5;
+    -fx-translate-y:5;
+    -fx-background-insets: 1 1 1 1;
+}

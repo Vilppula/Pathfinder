@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Pathfinder.controllers.MainviewController">
+   <children>
+      <HBox alignment="CENTER" layoutX="80.0" layoutY="14.0" prefHeight="50.0" prefWidth="900.0" spacing="30.0">
+         <children>
+            <Button fx:id="dijkstra" mnemonicParsing="false" onAction="#dijkstra" stylesheets="@../styles/style.css" text="Dijkstra" />
+            <Button fx:id="aStar" layoutX="420.0" layoutY="10.0" mnemonicParsing="false" onAction="#aStar" stylesheets="@../styles/style.css" text="A*" />
+            <Button fx:id="fringeSearch" layoutX="475.0" layoutY="10.0" mnemonicParsing="false" onAction="#fringeSearch" stylesheets="@../styles/style.css" text="Fringe Search" />
+         </children>
+      </HBox>
+      <Pane fx:id="map" prefHeight="700.0" prefWidth="900.0" style="-fx-background-color: white; -fx-border-color: black; -fx-border-width: 5;" translateX="80.0" translateY="80.0" />
+   </children>
+</AnchorPane>
