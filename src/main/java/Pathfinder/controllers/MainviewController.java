@@ -17,7 +17,7 @@ import javafx.scene.layout.VBox;
 public class MainviewController implements Initializable {
 
     @FXML Button dijkstra, aStar, fringeSearch;
-    @FXML Pane map;
+    @FXML Pane mainArea;
     
     private Button toggleButton;
     
@@ -40,14 +40,14 @@ public class MainviewController implements Initializable {
     }
     
     public void changeToggle() {
-         if (toggleButton.getStyleClass().contains("toggledButton")) {
-           toggleButton.getStyleClass().remove("toggledButton");
-        } else toggleButton.getStyleClass().add("toggledButton");
+         if (toggleButton.getStyleClass().contains("toggledTopbutton")) {
+           toggleButton.getStyleClass().remove("toggledTopbutton");
+        } else toggleButton.getStyleClass().add("toggledTopbutton");
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-       map.setCursor(new ImageCursor(new Image("/A.png")));
+       mainArea.setCursor(new ImageCursor(new Image("/A.png")));
     }
     
 }

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- *
+ * Testiluokka luokkaan 'Dijkstra' laaditun Dijkstran algoritmin testaamiseen
  * @author lasse
  */
 public class DijkstraTest {
@@ -19,9 +19,5 @@ public class DijkstraTest {
         this.dijkstra = new Dijkstra();
     }
     
-    @Test
-    public void someTest() {
-        String name = "nimi";
-        assertEquals(name, dijkstra.name(name));
-    }
+    
 }

@@ -1,4 +1,4 @@
-.button {
+.topbutton {
     -fx-pref-width: 250;
     -fx-pref-height: 60;
     -fx-font-family: 'Georgia Bold';
@@ -10,10 +10,18 @@
     -fx-effect: dropshadow(three-pass-box, black, 4, 1, 2, 4);
 }
 
-.toggledButton {
+.toggledTopbutton {
     -fx-background-color:white;
     -fx-effect: null;
     -fx-translate-x:5;
     -fx-translate-y:5;
     -fx-background-insets: 1 1 1 1;
+}
+
+.mainPane {
+    -fx-pref-width: 500;
+    -fx-pref-height: 700;
+    -fx-background-color:#a2a2a2;
+    -fx-border-color:black;
+    -fx-border: 5 5 5 5;
 }

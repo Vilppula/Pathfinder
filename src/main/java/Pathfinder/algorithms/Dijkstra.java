@@ -1,12 +1,18 @@
 package Pathfinder.algorithms;
 
+import Pathfinder.utility.GraphBuilder;
+
 /**
  * Dijkstran algorimin toteuttava luokka
  * @author lasse
  */
 public class Dijkstra {
     
-    public String name(String name) {
-        return name;
-    }
+   private GraphBuilder builder;
+   
+   public Dijkstra() {
+       this.builder = new GraphBuilder();
+   }
+    
+   
 }
