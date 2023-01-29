@@ -1,10 +1,6 @@
 package Pathfinder.utility;
 
 import Pathfinder.domain.Graphnode;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,29 +10,15 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class GraphBuilderTest {
     
-    private GraphBuilder builder;
-    private int[][] map;
+    GraphBuilder builder;
+    int[][] map = new int[100][100];
+    int[][] map2 = {
+        {0, 0, 0},
+        {0, 1, 0},
+        {0, 0, 0}
+    };
     
-    public GraphBuilderTest() {
-    }
     
-    @BeforeAll
-    public static void setUpClass() {
-    }
-    
-    @AfterAll
-    public static void tearDownClass() {
-    }
-    
-    @BeforeEach
-    public void setUp() {
-        map = new int[100][100];
-    }
-    
-    @AfterEach
-    public void tearDown() {
-    }
-
     @Test
     public void builderVoidaanLuodaTaulukolla() {
         this.builder = new GraphBuilder(map);
@@ -58,19 +40,18 @@ public class GraphBuilderTest {
     @Test
     public void createMetodiPalauttaaFalseJosKarttaaEiOleLadattu() {
         this.builder = new GraphBuilder();
-        assertFalse(this.builder.create());
+        assertFalse(this.builder.createGraph());
     }
     
     @Test
     public void createMetodiPalauttaaTrueJosKarttaOnLadattuJaSenKokoEiOleNolla() {
         this.builder = new GraphBuilder(map);
-        assertTrue(this.builder.create());
+        assertTrue(this.builder.createGraph());
     }
     
     @Test
     public void createMetodiLuoTaulukonJokaSis‰lt‰‰GraphnodeOlioita() {
         this.builder = new GraphBuilder(map);
-        builder.create();
         assertFalse(builder.getGraphnode(50, 50) == null);
     }
     
@@ -88,13 +69,58 @@ public class GraphBuilderTest {
     }
     
     @Test
+    public void getGraphnodePalauttaaNullJosKarttaaEiOleLadattu() {
+        this.builder = new GraphBuilder();
+        assertEquals(null, builder.getGraphnode(10, 10));
+    }
+    
+    @Test
+    public void getGraphnodePalauttaaNullJosPisteOnKartanUlkopuolella() {
+        this.builder = new GraphBuilder(map);
+        assertEquals(null, builder.getGraphnode(101, 101));
+    }
+    
+    @Test
     public void builderLaskeeSopivanHeuristisenEt‰isyysarvionSolmuille() {
         this.builder = new GraphBuilder(map);
-        builder.create();
         builder.heuristic(10, 10);
         Graphnode node1 = builder.getGraphnode(20, 20);
         Graphnode node2 = builder.getGraphnode(60, 88);
         assertEquals(20, node1.getHDistance());
         assertEquals(128, node2.getHDistance());
+    }
+    
+    @Test
+    public void numeroNollaKartassaLuoSolmun() {
+        this.builder = new GraphBuilder(map2);
+        assertEquals(Graphnode.class, builder.getGraphnode(1, 0).getClass());
+    }
+    
+    @Test
+    public void numeroYksiKartassaEiLuoSolmua() {
+        this.builder = new GraphBuilder(map2);
+        assertEquals(null, builder.getGraphnode(1, 1));
+    }
+    
+    @Test
+    public void solmuIlmoitetaanNaapurinListalle() {
+        this.builder = new GraphBuilder(map2);
+        assertTrue(builder.getGraphnode(1,0).getNeighbors().contains(builder.getGraphnode(0, 0)));
+    }
+    
+    @Test
+    public void solmuOnVainSenNaapureidenListalla() {
+        this.builder = new GraphBuilder(map2);
+        Graphnode node = builder.getGraphnode(1, 0);
+        assertTrue(builder.getGraphnode(0,0).getNeighbors().contains(node));
+        assertTrue(builder.getGraphnode(0,1).getNeighbors().contains(node));
+        assertFalse(builder.getGraphnode(2,2).getNeighbors().contains(node));
+    }
+    
+    @Test
+    public void solmullaOnOikeaM‰‰r‰Naapureita() {
+        this.builder = new GraphBuilder(map2);
+        Graphnode node = builder.getGraphnode(1, 0);
+        assertEquals(4, node.getNeighbors().size());
     }
 }

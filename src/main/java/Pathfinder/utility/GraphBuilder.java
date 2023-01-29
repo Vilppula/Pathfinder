@@ -8,7 +8,7 @@ import Pathfinder.domain.Graphnode;
  */
 public class GraphBuilder {
     
-    private int[][] map;
+    private int[][] map = null;
     private Graphnode[][] nodemap;
     private int height;
     private int width;
@@ -25,33 +25,51 @@ public class GraphBuilder {
      * @param map 
      */
     public GraphBuilder(int[][] map) {
-        if (!validateMap()) {
-            this.map = map;
-            this.height = map.length;
-            this.width = map[0].length;
-            this.nodemap = new Graphnode[height][width];
+        if (validateMap(map)) {
+            loadMap(map);
         }
     }
     
     /**
-     * Luodaan kaksiulotteinen kartta solmuista kun karttapohja ladataan käyttöliittymään.
+     * Lataa uuden kartan muuttujaan 'map'. Luodaan
+     * sitä vastaava verkko.
+     * @param map
      * @return 
      */
-    public boolean create() {
-        if (!validateMap()) {
+    public void loadMap(int[][] map) {
+        this.map = map;
+        this.height = map.length;
+        this.width = map[0].length;
+        this.nodemap = new Graphnode[height][width];
+        createGraph();
+    }
+    
+    /**
+     * Luodaan kaksiulotteinen kartta solmuista kun karttapohja ladataan käyttöliittymään.
+     * Lisätään kukin solmu sen naapurien listalle.
+     * @return 
+     */
+    public boolean createGraph() {
+        if (this.map == null) {
             return false;
         }
-        for (int i = 0; i < map.length; i++) {
-            for (int j = 0; j < map[0].length; j++) {
-                nodemap[i][j] = new Graphnode(i,j,
-                        (map[i][j] == 0 ? true: false)      //Luo joko kuljettava tai läpäisemätön solmu (0 = kuljettava)
-                );
+        for (int r = 0; r < 2; r++) {
+            for (int i = 0; i < map.length; i++) {
+                for (int j = 0; j < map[0].length; j++) {
+                    if (r == 0) {
+                        nodemap[i][j] = (
+                                map[i][j] == 0 ? new Graphnode(i,j): null       //Luo solmu jos kartan piste on 0 (valkoinen pikseli)
+                        );
+                    }
+                    else {
+                        announceNode(i, j);                                     //Ilmoita solmu naapureiden listalle
+                    }
+                }
             }
         }
         return true;
     }
 
-    
     /**
      * Asetetaan kullekin solmulle heuristinen arvio etäisyydestä valittuun
      * maalisolmuun (bx,by)
@@ -62,7 +80,7 @@ public class GraphBuilder {
      * @return 
      */
     public boolean heuristic(int by, int bx) {
-        if (!validateMap() || !validatePoint(by, bx)) {
+        if (map == null || !validatePoint(by, bx)) {
             return false;
         }
         for (int i = 0; i < map.length; i++) {
@@ -73,12 +91,11 @@ public class GraphBuilder {
         return true;
     }
     
-    
     /**
-     * Tarkista onko ladattu karttataulukko kelvollinen.
+     * Tarkista onko ladattava karttataulukko kelvollinen.
      * @return 
      */
-    public boolean validateMap() {
+    public boolean validateMap(int[][] map) {
         if (map != null && map.length > 0 && map[0].length > 0) {
             return true;
         }
@@ -86,19 +103,36 @@ public class GraphBuilder {
     }
     
     /**
-     * Tarkista onko jokin piste kartan sisä- vai ulkopuolella
+     * Tarkista onko jokin piste kartan sisä- vai ulkopuolella, sekä onko
+     * valitussa pisteessä olemassa solmu.
      * @param y
      * @param x
      * @return 
      */
     public boolean validatePoint(int y, int x) {
-        if (y < 0 || x < 0 || y > height-1 || x > width-1) {
+        if (y < 0 || x < 0 || y > height-1 || x > width-1
+                || nodemap[y][x] == null) {
             return false;
         }
         return true;
     }
 
-
+    /**
+     * Ilmoita koordinaateissa oleva solmu sen naapureiden listalle.
+     * @param y
+     * @param x 
+     */
+    public void announceNode(int y, int x) {
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (nodemap[y][x] == null || (i == 0 && j == 0) 
+                        || !validatePoint(y + i, x + j)) {       //Solmun lisäämisen ehdot
+                    continue;
+                }
+                nodemap[y+i][x+j].addNeighbor(nodemap[y][x]);
+            }
+        }
+    }
     //========================================================================== Get/set
     
     public int[][] getMap() {
@@ -113,11 +147,16 @@ public class GraphBuilder {
         return width;
     }
     
+    /**
+     * Palauttaa koordinaatteja vastaavan solmun.
+     * @param y
+     * @param x
+     * @return 
+     */
     public Graphnode getGraphnode(int y, int x) {
-        if (!validateMap() || !validatePoint(y, x)) {
+        if (map == null || !validatePoint(y, x)) {
             return null;
         }
-        
         return nodemap[y][x];
     }
 }

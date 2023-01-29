@@ -28,7 +28,7 @@ public class GraphnodeTest {
     
     @BeforeEach
     public void setUp() {
-        node = new Graphnode(1,1,true);
+        node = new Graphnode(1,1);
     }
     
     @AfterEach
@@ -42,15 +42,15 @@ public class GraphnodeTest {
 
     @Test
     public void uusiNaapuriVoidaanLisataSolmuun() {
-        Graphnode neighbor = new Graphnode(1, 1, true);
+        Graphnode neighbor = new Graphnode(0, 1);
         this.node.addNeighbor(neighbor);
         assertTrue(this.node.getNeighbors().contains(neighbor));
     }
     
     @Test
-    public void solmunAloitusEtaisyysOnNegatiivinen() {
-        assertTrue(this.node.getDistance() < 0);
-        assertTrue(this.node.getHDistance() < 0);
+    public void solmunAloitusEtaisyysOnMahdollisimmanSuuri() {
+        assertTrue(this.node.getDistance() == Integer.MAX_VALUE);
+        assertTrue(this.node.getHDistance() == Integer.MAX_VALUE);
     }
     
     @Test

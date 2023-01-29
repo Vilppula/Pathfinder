@@ -1,5 +1,6 @@
 package Pathfinder.algorithms;
 
+import Pathfinder.utility.GraphBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,11 +14,13 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class DijkstraTest {
     
-    private Dijkstra dijkstra;
+    Dijkstra dijkstra;
+    GraphBuilder builder;
     
-    public DijkstraTest() {
-        this.dijkstra = new Dijkstra();
+    @BeforeAll
+    public void setUp() {
+        builder = new GraphBuilder();
+        dijkstra = new Dijkstra(builder);
     }
-    
     
 }

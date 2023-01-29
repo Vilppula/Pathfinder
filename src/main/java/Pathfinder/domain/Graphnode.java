@@ -10,24 +10,25 @@ import java.util.List;
 public class Graphnode {
     
     private List<Graphnode> neighbors;
+    private boolean expanded;
     private int x;
     private int y;
-    private boolean passable;
     private int distance;
     private int HDistance;
 
     /**
-     * Luo uuden verkon solmun. Tarvitsee koordinaatit.
+     * Luo uuden verkon solmun. Tarvitsee koordinaatit. Etäisyydet ovat aluksi
+     * näennäisesti äärettömiä.
      * @param y
      * @param x 
      */
-    public Graphnode(int y, int x, boolean passable) {
+    public Graphnode(int y, int x) {
         this.neighbors = new ArrayList<>();
-        this.distance = -1;
-        this.HDistance = -1;
+        this.expanded = false;
+        this.distance = Integer.MAX_VALUE;
+        this.HDistance = Integer.MAX_VALUE;
         this.x = x;
         this.y = y;
-        this.passable = passable;
     }
     
     public void addNeighbor(Graphnode neighbor) {
@@ -42,6 +43,14 @@ public class Graphnode {
         this.HDistance = hDistance;
     }
 
+    public void setExpanded() {
+        this.expanded = true;
+    }
+    
+    public int[] getCoordinate() {
+        return new int[] {this.y, this.x};
+    }
+
     public int getDistance() {
         return distance;
     }
@@ -54,9 +63,12 @@ public class Graphnode {
         return neighbors;
     }
 
-    public boolean isPassable() {
-        return passable;
+    public boolean isExpanded() {
+        return expanded;
     }
 
-    
+    @Override
+    public String toString() {
+        return "Graphnode{" + "x=" + x + ", y=" + y + "} dist="+distance;
+    }
 }
