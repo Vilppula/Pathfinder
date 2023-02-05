@@ -1,6 +1,8 @@
 ## Testausdokumentti
 
 ### Testauskattavuus
+Testauskattavuutta tarkistellaan Jacoco:n avulla.
+
 
 ### Testattavat asiat
 
