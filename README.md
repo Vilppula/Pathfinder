@@ -28,4 +28,5 @@ gradlew test
 
 [Viikko 2](https://github.com/Vilppula/Pathfinder/blob/master/documents/Viikkoraportti%202.md)  
 
-[Viikko 3]()  
+[Viikko 3](https://github.com/Vilppula/Pathfinder/blob/master/documents/Viikkoraportti%203.md)  
+
