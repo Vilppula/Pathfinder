@@ -25,3 +25,4 @@ gradle build test
 ```
 
 ### Tuloksia
+Tuloksia tarkastellaan tulevassa päivityksessä.
