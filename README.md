@@ -31,6 +31,9 @@ tai Linuxin
 ```
 Tarkempaa tieto testeistä [testausdokumentissa](https://github.com/Vilppula/Pathfinder/blob/master/documents/Testausdokumentti.md)  
 
+## Koodin laatu
+Koodin laatutarkistus tehdään checkstylellä. Checkstyle raportti löytyy html muotoisena polulta build/reports/checkstyle/main.html
+
 ## Raportointi
 [Viikko 1](https://github.com/Vilppula/Pathfinder/blob/master/documents/Viikkoraportti%201.md) 
 
