@@ -5,7 +5,7 @@ Testauskattavuutta tarkistellaan Jacoco:n avulla.
 
 <img src="https://github.com/Vilppula/Pathfinder/blob/master/documents/Images/Jacoco.jpg" width=800>
 
-Testauskattavuuden tarkistus suoritetaan aina testien yhteydessä.
+Testauskattavuuden tarkistus suoritetaan aina testien yhteydessä, jonka jälkeen testauskattavuus löytyy html-muodossa polulta /build/jacocoHtml/index.html.
 
 ### Testattavat asiat
 Testauksen keskiössä on verkonmuodostus, reitinhakualgoritmit sekä apuluokat.
