@@ -8,19 +8,26 @@ Ohjelma suoritetaan komennolla
 ```bash
 gradle run
 ```
-tai jos Gradle ei ole asennettuna, komennolla
+tai jos Gradle ei ole asennettuna, projektiin on lisätty Gradle wrapper, joka suoritetaan Windowsissa komennolla
 ```bash
 gradlew run
 ```
-
+tai Linux-ympäristössä komennolla
+```bash
+./gradlew run
+```
 ## Testit
 Ohjelman testit ajetaan vastaavasti joko komennolla
 ```bash
 gradle test
 ```
-tai
+tai Windowsin
 ```bash
 gradlew test
+```
+tai Linuxin
+```bash
+./gradlew test
 ```
 Tarkempaa tieto testeistä [testausdokumentissa](https://github.com/Vilppula/Pathfinder/blob/master/documents/Testausdokumentti.md)  
 
