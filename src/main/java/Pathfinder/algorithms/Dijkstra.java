@@ -2,51 +2,80 @@ package Pathfinder.algorithms;
 
 import Pathfinder.domain.Graphnode;
 import Pathfinder.utility.GraphBuilder;
-import java.util.Comparator;
-import java.util.List;
 import java.util.PriorityQueue;
 
 /**
  * Dijkstran algorimin toteuttava luokka.
  * @author lasse
  */
-public class Dijkstra {
+public class Dijkstra implements Calculable {
     
     private GraphBuilder builder;
-    private PriorityQueue<Graphnode> q;
+    protected PriorityQueue<int[]> q;     //Jonossa kolmikoita (distance, y, x), jotka kertovat lasketun etäisyyden kuhunkin koordinaattiin.
     
     public Dijkstra(GraphBuilder builder) {
         this.builder = builder;
-        this.q = new PriorityQueue<>(Comparator.comparing(Graphnode::getDistance));
     }
    
     /**
-     * Ratkaisee lyhyimmän reitin pisteestä (ax,ay) pisteeseen (bx,by).
-     * Palauttaa lyhyimmän reitin listana.
+     * Ratkaisee lyhyimmän reitin pisteestä (ay, ax) pisteeseen (by, bx) (huom.
+     * koordinaatit esitetty muodossa (y,x).
+     * Reitti löytyy Graphnodejen 'previous'-viitteitä seuraamalla.
+     * seuraamalla.
      * @param ay
      * @param ax
      * @param by
      * @param bx
      * @return 
      */
-    public List<int[]> calculate(int ay, int ax, int by, int bx) {
-        if (!builder.validatePoint(ay, ax) || !builder.validatePoint(by, bx)) {
-            return null;
+    public boolean calculate(int ay, int ax, int by, int bx) {
+        if (!builder.reset()) {
+            return false;
         }
+        if (!builder.validatePoint(ay, ax) || !builder.validatePoint(by, bx)) {
+            return false;
+        }
+        this.q = new PriorityQueue<>((a, b) -> Integer.compare(a[0], b[0]));
+        builder.getGraphnode(ay, ax).setDistance(0);
+        builder.getGraphnode(ay, ax).isInQ();
+        q.add(new int[]{0, ay, ax});
+        
         while (!q.isEmpty()) {
-            Graphnode node = q.poll();
+            int[] c = q.poll();
+            Graphnode node = builder.getGraphnode(c[1], c[2]);
+            node.notInQ();
             if (node.isExpanded()) {
                 continue;
             }
-            node.setExpanded();
+            node.setExpanded();                                                 //Asetetaan tämä solmu käsitellyksi
             for (Graphnode next: node.getNeighbors()) {
-                if (next.isExpanded()) {
+                if (next.isExpanded()) {                                        //Jo tarkasteltuihin solmuihin ei palata
                     continue;
                 }
-                next.setDistance(Math.min(node.getDistance() + 1, next.getDistance()));
-                q.add(next);
+                if (adjust(next, node.getDistance() + 1)) {                     //Jos naapurille lisättiin uusi parempi etäisyys...
+                    next.setPrevious(node);                                     //...merkitään sille edeltäjäksi tämä solmu.
+                }
+                if (by == next.getY() && bx == next.getX()) {                   //Jos seuraavana oleva solmu on maalisolmu, lopetetaan haku.
+                    return true;
+                }
             }
         }
-        return null;
+        return false;                                                           //Haku päättyy, maalisolmua ei löytynyt
+    }
+    
+    /**
+     * Dijkstran algoritmin mukainen etäisyyden säätö.
+     * @param next
+     * @param now 
+     */
+    public boolean adjust(Graphnode next, int g) {                              //Säädetään naapurisomun etäisyyttä.
+        if (next.getDistance() <= g) {                                          //Tarkistetaan onko naapurille annettava etäisyys paras tähänastisista.
+            return false;
+        }
+        next.setDistance(g);
+        int ny = next.getY();
+        int nx = next.getX();
+        q.add(new int[]{g, ny, nx});                                            //Lisätään naapurisolmu jonoon
+        return true;
     }
 }

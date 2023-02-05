@@ -55,14 +55,14 @@ public class GraphnodeTest {
     
     @Test
     public void solmulleVoidaanLaskeaUusiEtaisyys() {
-        assertTrue(this.node.getDistance() < 0);
+        assertTrue(this.node.getDistance() == Integer.MAX_VALUE);
         this.node.setDistance(10);
         assertEquals(10, this.node.getDistance());
     }
     
     @Test
     public void solmulleVoidaanAntaaEtaisyysArvio() {
-        assertTrue(this.node.getHDistance() < 0);
+        assertTrue(this.node.getHDistance() == Integer.MAX_VALUE);
         this.node.setHDistance(10);
         assertEquals(10, this.node.getHDistance());
     }
