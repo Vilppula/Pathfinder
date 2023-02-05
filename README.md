@@ -22,8 +22,9 @@ tai
 ```bash
 gradlew test
 ```
-## Dokumentaatio
-#### Viikkoraportit
+Tarkempaa tieto testeistä [testausdokumentissa](https://github.com/Vilppula/Pathfinder/blob/master/documents/Testausdokumentti.md)  
+
+## Raportointi
 [Viikko 1](https://github.com/Vilppula/Pathfinder/blob/master/documents/Viikkoraportti%201.md) 
 
 [Viikko 2](https://github.com/Vilppula/Pathfinder/blob/master/documents/Viikkoraportti%202.md)  
