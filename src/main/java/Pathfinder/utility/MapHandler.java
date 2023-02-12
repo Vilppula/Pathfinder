@@ -22,6 +22,16 @@ public class MapHandler {
     private int width;
     private int[][] map;
     
+    /**
+     * Luo karttakuvan käsittelijä ilman karttapohjaa.
+     */
+    public MapHandler() {
+    }
+    
+    /**
+     * Luo karttakuvan käsittelijä karttapohjan kanssa.
+     * @param image 
+     */
     public MapHandler(Image image) {
         loadImage(image);
     }
@@ -38,24 +48,17 @@ public class MapHandler {
         this.width = (int) orig.getWidth();
         this.baw = new WritableImage(width, height);
         this.bawWriter = baw.getPixelWriter();
+        map = new int[height][width];
         createBlackAndWhite();
         return true;
     }
     
-    /**
-     * Muodostaa mustavalkokuvaa vastaavan taulukon. Toimii verkon luomisessa
-     * GraphBuilder-instanssissa.
-     * @return 
-     */
-    public int[][] pixelsToArray() {
-        return null;
-    }
     
     /**
      * Muodostaa ladatusta karttakuvasta mustavalkokuvan.
      * @return 
      */
-    public boolean createBlackAndWhite() {
+    private boolean createBlackAndWhite() {
         map = new int[height][width];
         for (int i = 0; i < orig.getHeight(); i++) {
             for (int j = 0; j < orig.getWidth(); j++) {
@@ -98,6 +101,9 @@ public class MapHandler {
      * @return 
      */
     public Image getBlackAndWhite() {
+        if (this.orig == null) {
+            return null;
+        }
         return this.blackAndWhite;
     }
     
@@ -105,7 +111,7 @@ public class MapHandler {
      * Palauttaa mustavalkokarttaa vastaavan taulukon (alkiot joko 0 = valkoinen, 1 = musta)
      * @return 
      */
-    public int[][] getMapArray() {
+    public int[][] getMap() {
         return this.map;
     }
 }

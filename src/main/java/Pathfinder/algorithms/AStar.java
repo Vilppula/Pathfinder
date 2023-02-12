@@ -2,6 +2,8 @@ package Pathfinder.algorithms;
 
 import Pathfinder.domain.Graphnode;
 import Pathfinder.utility.GraphBuilder;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A* algoritmin toteuttava luokka. Perii luokan 'Dijkstra'. Toteutus
@@ -10,8 +12,8 @@ import Pathfinder.utility.GraphBuilder;
  */
 public class AStar extends Dijkstra {
     
-    public AStar(GraphBuilder builder) {
-        super(builder);
+    public AStar(GraphBuilder builder, Solver solver) {
+        super(builder, solver);
     }
     /**
      * Lis‰t‰‰n solmun ilmentym‰ jonoon laskemalla heuristinen arvio mukaan.
@@ -19,14 +21,19 @@ public class AStar extends Dijkstra {
      * @param g 
      */
     @Override
-    public boolean adjust(Graphnode next, int g) {
-        if (next.getDistance() <= g) {
+    public boolean adjust(Graphnode next, int newDist) {
+        if (newDist >= next.getDistance()) {
             return false;
         }
-        next.setDistance(g);
+        next.setDistance(newDist);
         int ny = next.getY();
         int nx = next.getX();
-        super.q.add(new int[]{g + next.getHDistance(), ny, nx});
+        super.q.add(new int[]{newDist+next.getHDistance(), ny, nx});
         return true;
+    }
+    
+    @Override
+    public void addNode(Graphnode node) {
+        solver.addAStarNode(node);
     }
 }

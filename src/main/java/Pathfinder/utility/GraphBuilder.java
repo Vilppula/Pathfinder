@@ -1,6 +1,7 @@
 package Pathfinder.utility;
 
 import Pathfinder.domain.Graphnode;
+import java.util.List;
 
 /**
  * Luo graafin käyttöliittymään ladatun kuvan perusteella. Dijkstran ja A*:n käytössä.
@@ -11,16 +12,15 @@ public class GraphBuilder {
     private Settings settings;
     private int[][] map = null;
     private Graphnode[][] nodemap;
-    private int height;
-    private int width;
-
+    private int height = 0;
+    private int width = 0;
+    
+    
     /**
      * Luodaan GraphBuilder ilman karttapohjaa.
      */
     public GraphBuilder(Settings settings) {
         this.settings = settings;
-        this.height = 0;
-        this.width = 0;
     }
     
     /**
@@ -97,8 +97,11 @@ public class GraphBuilder {
         }
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[0].length; j++) {
+                if (nodemap[i][j] == null) {
+                    continue;
+                }
                 if (settings.heuristic == settings.heuristic.MANHATTAN) {
-                    nodemap[i][j].setHDistance(Math.abs((i-by)+(j-bx)));        //Manhattan-etäisyys
+                    nodemap[i][j].setHDistance((Math.abs((i-by)+(j-bx)))*100);        //Manhattan-etäisyys
                 } else if (settings.heuristic == settings.heuristic.EUCLIDEAN) {
                         nodemap[i][j].setHDistance((int) 
                                 Math.sqrt((i-by)^2 + (j-bx)^2)                  //Euklidinen etäisyys (pyöristys kokonaisluvuksi)
@@ -128,7 +131,7 @@ public class GraphBuilder {
      * @return 
      */
     public boolean validatePoint(int y, int x) {
-        if (y < 0 || x < 0 || y > height-1 || x > width-1
+        if (y < 0 || x < 0 || y >= height || x >= width
                 || map == null || nodemap[y][x] == null) {
             return false;
         }
@@ -161,13 +164,15 @@ public class GraphBuilder {
         }
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                if (nodemap[i][j] != null) {
-                    nodemap[i][j].setDistance(Integer.MAX_VALUE);
+                Graphnode node = nodemap[i][j];
+                if (node != null) {
+                    node.reset();
                 }
             }
         }
         return true;
     }
+    
     //========================================================================== Get/set
     
     public int[][] getMap() {
@@ -205,7 +210,7 @@ public class GraphBuilder {
      * @param y
      * @return 
      */
-    public boolean isPassable(double x, double y) {
+    public boolean isPassable(double y, double x) {
         return map[(int) y][(int) x] == 0;
     }
 }

@@ -1,5 +1,7 @@
 package Pathfinder.controllers;
 
+import Pathfinder.algorithms.Solver;
+import Pathfinder.utility.Visualizer;
 import Pathfinder.utility.GraphBuilder;
 import Pathfinder.utility.MapHandler;
 import Pathfinder.utility.Settings;
@@ -9,17 +11,13 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.ImageCursor;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 /**
  * P‰‰n‰kym‰n kontrolleriluokka.
@@ -27,8 +25,9 @@ import javafx.scene.layout.VBox;
  */
 public class MainviewController implements Initializable {
 
-    private GraphBuilder graph;
+    public GraphBuilder graph;
     private Settings settings;
+    private Visualizer visualizer;
     
     private ImageCursor cursorA = new ImageCursor(new Image("/from.png"), 24, 44);
     private ImageCursor cursorB = new ImageCursor(new Image("/to.png"), 24, 44);
@@ -36,11 +35,12 @@ public class MainviewController implements Initializable {
     private ImageCursor cursor;
     private ImageView aLocation;
     private ImageView bLocation;
-    private MapHandler mapHandler; 
+    private MapHandler mapHandler;
+    private Solver solver;
     
-    @FXML Button dijkstra, aStar, fringeSearch;
+    @FXML public Button dijkstra, aStar, fringeSearch;
     @FXML Pane mainArea;
-    @FXML ImageView mapImage, bawImage;
+    @FXML public ImageView mapImage, bawImage, routeImage, dotImage, dotImage2, dotImage3;
     @FXML Pane map, stickerLayer;
     @FXML Label coordinates, colorLabel;
     @FXML Canvas canvas;
@@ -56,25 +56,44 @@ public class MainviewController implements Initializable {
     public void loadUtil(GraphBuilder graph, Settings settings) {
         this.graph = graph;
         this.settings = settings;
+        
     }
     
     @FXML
     public void dijkstra() {
         toggleButton = dijkstra;
+        solver.dijkstra();
         changeToggle();
     }
     
     @FXML
     public void aStar() {
         toggleButton = aStar;
+        solver.aStar();
         changeToggle();
     }
     
     @FXML
     public void fringeSearch() {
         toggleButton = fringeSearch;
+        solver.fringeSearch();
         changeToggle();
     }
+    
+    /**
+     * Solve painikketta painettaessa kutsutaan t‰t‰ metodia.
+     * Pyyt‰‰ apuluokkia ratkaisemaan ja piirt‰m‰‰n reitin.
+     */
+    @FXML
+    public void solve() {
+        if (!solver.solve()) {             //Solver ratkaisee reitin algoritmien avulla
+            System.out.println("Ei voitu laskea reitti‰");
+            return;
+        }          
+        visualizer.visualize(solver);             //Visualisoidaan algoritmien eteneminen
+        this.visualizer.drawRoute(solver.getBy(), solver.getBx());  //Piirret‰‰n reitti
+    }
+    
     
     /**
      * Sijoittaa l‰htˆ- tai maali-kuvakkeen
@@ -83,6 +102,9 @@ public class MainviewController implements Initializable {
      */
     @FXML
     public void mapClick(double y, double x) {
+        if (!graph.isPassable(y, x)) {
+            return;
+        }
         if (cursor == cursorA) {
             if (aLocation == null) {
                 aLocation = new ImageView(new Image("/from.png"));
@@ -90,6 +112,7 @@ public class MainviewController implements Initializable {
             }
             aLocation.setTranslateY(y-44);
             aLocation.setTranslateX(x-24);
+            solver.addA((int) y, (int) x);
         } else {
             if (bLocation == null) {
                 bLocation = new ImageView(new Image("/to.png"));
@@ -97,6 +120,7 @@ public class MainviewController implements Initializable {
             }
             bLocation.setTranslateY(y-44);
             bLocation.setTranslateX(x-24);
+            solver.addB((int) y, (int) x);
         }
         changeAB();
         map.setCursor(cursor);
@@ -144,21 +168,28 @@ public class MainviewController implements Initializable {
      */
     public void changeMap(Image image) {
         mapHandler.loadImage(image);
-        graph.loadMap(mapHandler.getMapArray());
+        visualizer.setImageSize(image);
+        graph.loadMap(mapHandler.getMap());
         this.mapImage.setImage(image);
         this.bawImage.setImage(mapHandler.getBlackAndWhite());
     }
     
     /**
-     * Alustetaan n‰kym‰. Asetetaan tapahtumank‰sittelij‰t.
+     * Alustetaan n‰kym‰. Luodaan apuluokat. Asetetaan tapahtumank‰sittelij‰t.
      * @param url
      * @param rb 
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        settings = new Settings();                          //Luo asetukset
+        graph = new GraphBuilder(settings);                 //Luo verkon rakentaja
+        solver = new Solver(graph, settings);               //Luo reitinratkaisija
+        visualizer = new Visualizer(this);                  //Luo piirt‰j‰
+        mapHandler = new MapHandler();
+        changeMap(new Image("/Maze1.png"));
+        
         cursor = cursorA;
         map.setCursor(cursor);
-        mapHandler = new MapHandler(new Image("/testMap.jpg"));
         mapImage.setImage(mapHandler.getOriginal());
         bawImage.setImage(mapHandler.getBlackAndWhite());
         map.setOnMouseMoved(new EventHandler<MouseEvent>() {

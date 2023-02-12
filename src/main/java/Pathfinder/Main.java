@@ -23,14 +23,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        settings = new Settings();
-        graph = new GraphBuilder(settings);
+        
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/FXML/Mainview.fxml"));
         scene = new Scene(fxmlLoader.load());
         stage.setScene(scene);
         stage.show();
         mainView = fxmlLoader.getController();
-        mainView.loadUtil(graph, settings);
+        //mainView.loadUtil(graph, settings);
     }
 
     

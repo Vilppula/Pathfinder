@@ -18,8 +18,10 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class DijkstraTest {
     
-    GraphBuilder builder = new GraphBuilder(new Settings());
-    Calculable algorithm = new Dijkstra(builder);
+    Settings settings = new Settings();
+    GraphBuilder builder = new GraphBuilder(settings);
+    Solver solver = new Solver(builder, settings);
+    Calculable algorithm = new Dijkstra(builder, solver);
     int[][] map = new int[][]{
             {0,0,0,0,0,0,1,0},
             {0,0,1,0,0,1,1,1},
@@ -48,20 +50,20 @@ public class DijkstraTest {
     }
     
     @Test
-    public void etaisyysViereisiinSolmuihinOnYksi() {
+    public void etaisyysViereisiinSolmuihinOnOikein() {
         assertTrue(algorithm.calculate(1, 1, 2, 6));
-        assertEquals(1, builder.getGraphnode(0, 0).getDistance());
-        assertEquals(1, builder.getGraphnode(1, 0).getDistance());
-        assertEquals(1, builder.getGraphnode(2, 0).getDistance());
-        assertEquals(1, builder.getGraphnode(0, 1).getDistance());
-        assertEquals(1, builder.getGraphnode(0, 2).getDistance());
+        assertEquals(141, builder.getGraphnode(0, 0).getDistance());
+        assertEquals(100, builder.getGraphnode(1, 0).getDistance());
+        assertEquals(141, builder.getGraphnode(2, 0).getDistance());
+        assertEquals(100, builder.getGraphnode(0, 1).getDistance());
+        assertEquals(141, builder.getGraphnode(0, 2).getDistance());
     }
     
     @Test
     public void maalisolmunEtaisyysLasketaanOikein() {
         assertEquals(Integer.MAX_VALUE, builder.getGraphnode(2, 6).getDistance());
         algorithm.calculate(0, 0, 2, 6);
-        assertEquals(7, builder.getGraphnode(2, 6).getDistance());
+        assertEquals(823, builder.getGraphnode(2, 6).getDistance());
     }
     
     @Test
@@ -81,5 +83,17 @@ public class DijkstraTest {
             route += "(" + node.getY() + "," + node.getX() + ")";
         } while (node.getDistance() != 0);
         assertEquals("(2,6)(3,5)(3,4)(2,3)(1,3)(0,2)(0,1)(0,0)", route);
+    }
+    
+    @Test
+    public void algoritmiEiMuutaSolmunEtaisyyttaHuonommaksi() {
+        algorithm.calculate(0, 0, 2, 6);
+        assertFalse(algorithm.adjust(builder.getGraphnode(1, 0), 110));
+    }
+    
+    @Test
+    public void algoritmiParantaaSolmunEtäisyyttä() {
+        algorithm.calculate(0, 0, 2, 6);
+        assertTrue(algorithm.adjust(builder.getGraphnode(1, 0), 90));
     }
 }

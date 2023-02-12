@@ -33,7 +33,9 @@ jacocoTestReport {
         classDirectories.setFrom(files(classDirectories.files.collect {
             fileTree(dir: it, exclude: [
                 "Pathfinder/controllers/*.*",
-                "Pathfinder/utility/Map*.*"
+                "Pathfinder/utility/Map*.*",
+                "Pathfinder/utility/Vis*.*",
+                "Pathfinder/domain/Node*.*"
             ])
         }))
     }
@@ -44,11 +46,13 @@ checkstyle {
     configFile file("/checkstyle.xml")
     ignoreFailures = true
 }
+
 checkstyleMain {
-    source ='src/main/java'
+    source ='src/main/java/Pathfinder'
 }
+
 checkstyleTest {
-    source ='src/test/java'
+    source ='src/test/java/Pathfinder'
 }
 
 test {

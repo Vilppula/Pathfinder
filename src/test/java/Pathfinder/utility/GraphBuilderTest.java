@@ -90,8 +90,8 @@ public class GraphBuilderTest {
         assertTrue(builder.heuristic(10, 10));
         Graphnode node1 = builder.getGraphnode(20, 20);
         Graphnode node2 = builder.getGraphnode(60, 88);
-        assertEquals(20, node1.getHDistance());
-        assertEquals(128, node2.getHDistance());
+        assertEquals(2000, node1.getHDistance());
+        assertEquals(12800, node2.getHDistance());
     }
     
     @Test
@@ -126,5 +126,27 @@ public class GraphBuilderTest {
         builder.loadMap(map2);
         Graphnode node = builder.getGraphnode(1, 0);
         assertEquals(4, node.getNeighbors().size());
+    }
+    
+    @Test
+    public void josKarttaaEiOleResetointiEiToimi() {
+        builder = new GraphBuilder(new Settings());
+        assertFalse(builder.reset());
+    }
+    
+    @Test
+    public void graafinResetoiminenPalauttaaSolmujenEtaisyydenMaksimiin() {
+        builder.getGraphnode(50, 50).setDistance(1000);
+        builder.getGraphnode(80, 77).setDistance(1000);
+        builder.reset();
+        assertEquals(Integer.MAX_VALUE, builder.getGraphnode(50, 50).getDistance());
+        assertEquals(Integer.MAX_VALUE, builder.getGraphnode(80, 77).getDistance());
+    }
+    
+    @Test
+    public void metodiIsPassablePalauttaaOikeanArvon() {
+        builder.loadMap(map2);
+        assertFalse(builder.isPassable(1, 1));
+        assertTrue(builder.isPassable(0, 1));
     }
 }

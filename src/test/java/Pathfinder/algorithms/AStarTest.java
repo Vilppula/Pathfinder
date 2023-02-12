@@ -5,6 +5,7 @@
  */
 package Pathfinder.algorithms;
 
+import Pathfinder.domain.Graphnode;
 import Pathfinder.utility.GraphBuilder;
 import Pathfinder.utility.Settings;
 import org.junit.jupiter.api.AfterEach;
@@ -20,8 +21,18 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class AStarTest extends DijkstraTest {
     
-    GraphBuilder builder = new GraphBuilder(new Settings());
-    Calculable algorithm = new AStar(builder);
     
+    Calculable algorithm = new AStar(builder, solver);
     
+    @Test
+    public void algoritmiEiMuutaSolmunEtaisyyttaHuonommaksi() {
+        algorithm.calculate(0, 0, 2, 6);
+        assertFalse(algorithm.adjust(builder.getGraphnode(1, 0), 110));
+    }
+    
+    @Test
+    public void algoritmiParantaaSolmunEtäisyyttä() {
+        algorithm.calculate(0, 0, 2, 6);
+        assertTrue(algorithm.adjust(builder.getGraphnode(1, 0), 90));
+    }
 }

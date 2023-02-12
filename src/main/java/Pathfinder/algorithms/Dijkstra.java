@@ -3,6 +3,9 @@ package Pathfinder.algorithms;
 import Pathfinder.domain.Graphnode;
 import Pathfinder.utility.GraphBuilder;
 import java.util.PriorityQueue;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Dijkstran algorimin toteuttava luokka.
@@ -11,10 +14,17 @@ import java.util.PriorityQueue;
 public class Dijkstra implements Calculable {
     
     private GraphBuilder builder;
+    protected Solver solver;
     protected PriorityQueue<int[]> q;     //Jonossa kolmikoita (distance, y, x), jotka kertovat lasketun et‰isyyden kuhunkin koordinaattiin.
+    private int actionNumber;
     
-    public Dijkstra(GraphBuilder builder) {
+    /**
+     * Dijkstran konstruktori. Verkko annetaan parametrina.
+     * @param builder 
+     */
+    public Dijkstra(GraphBuilder builder, Solver solver) {
         this.builder = builder;
+        this.solver = solver;
     }
    
     /**
@@ -29,17 +39,12 @@ public class Dijkstra implements Calculable {
      * @return 
      */
     public boolean calculate(int ay, int ax, int by, int bx) {
-        if (!builder.reset()) {
-            return false;
-        }
-        if (!builder.validatePoint(ay, ax) || !builder.validatePoint(by, bx)) {
-            return false;
-        }
+        Scanner scan = new Scanner(System.in);
         this.q = new PriorityQueue<>((a, b) -> Integer.compare(a[0], b[0]));
         builder.getGraphnode(ay, ax).setDistance(0);
         builder.getGraphnode(ay, ax).isInQ();
         q.add(new int[]{0, ay, ax});
-        
+        actionNumber = 0;
         while (!q.isEmpty()) {
             int[] c = q.poll();
             Graphnode node = builder.getGraphnode(c[1], c[2]);
@@ -47,13 +52,19 @@ public class Dijkstra implements Calculable {
             if (node.isExpanded()) {
                 continue;
             }
+            node.addExpandedValue(actionNumber);                                //Lis‰‰ solmulle vuoronumeron jolla sen tarkastelu aloitettiin
+            actionNumber++;
+            addNode(node);
             node.setExpanded();                                                 //Asetetaan t‰m‰ solmu k‰sitellyksi
             for (Graphnode next: node.getNeighbors()) {
                 if (next.isExpanded()) {                                        //Jo tarkasteltuihin solmuihin ei palata
                     continue;
                 }
-                if (adjust(next, node.getDistance() + 1)) {                     //Jos naapurille lis‰ttiin uusi parempi et‰isyys...
-                    next.setPrevious(node);                                     //...merkit‰‰n sille edelt‰j‰ksi t‰m‰ solmu.
+                //Lis‰t‰‰n diagonaalisesti siirrytt‰erss‰ et‰isyyteen 141, muuten 100
+                int newDist = node.getDistance() + 
+                        (Math.abs(next.getX()-node.getX()) + Math.abs(next.getY() - node.getY()) == 2 ? 141 : 100);
+                if (adjust(next, newDist)) {
+                    next.setPrevious(node);
                 }
                 if (by == next.getY() && bx == next.getX()) {                   //Jos seuraavana oleva solmu on maalisolmu, lopetetaan haku.
                     return true;
@@ -64,18 +75,25 @@ public class Dijkstra implements Calculable {
     }
     
     /**
-     * Dijkstran algoritmin mukainen et‰isyyden s‰‰tˆ.
+     * Dijkstran algoritmin mukainen et‰isyyden s‰‰tˆ ja jonoon lis‰‰minen.
      * @param next
      * @param now 
      */
-    public boolean adjust(Graphnode next, int g) {                              //S‰‰det‰‰n naapurisomun et‰isyytt‰.
-        if (next.getDistance() <= g) {                                          //Tarkistetaan onko naapurille annettava et‰isyys paras t‰h‰nastisista.
+    public boolean adjust(Graphnode next, int newDist) {                              //S‰‰det‰‰n naapurisomun et‰isyytt‰.
+        if (next.getDistance() <= newDist) {                                        //Tarkistetaan onko naapurille annettava et‰isyys paras t‰h‰nastisista.
             return false;
         }
-        next.setDistance(g);
+        next.setDistance(newDist);
         int ny = next.getY();
         int nx = next.getX();
-        q.add(new int[]{g, ny, nx});                                            //Lis‰t‰‰n naapurisolmu jonoon
+        q.add(new int[]{newDist, ny, nx});                                            //Lis‰t‰‰n naapurisolmu jonoon
+        next.addInListValue(actionNumber);                                      //Lis‰t‰‰n naapurisolmulle vuoronumero jolla se asetettiin jonoon
+        //solver.addToNodelist(next);
+        actionNumber++;
         return true;
+    }
+    
+    public void addNode(Graphnode node) {
+        solver.addDijkstraNode(node);   
     }
 }

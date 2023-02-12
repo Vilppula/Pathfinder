@@ -19,8 +19,9 @@ public class Graphnode {
     private int HDistance;      //Heuristinen et‰isyys t‰lle solmulle
     private int inQ;            //T‰m‰ luku kertoo montako kertaa t‰m‰ solmu esiintyy jonossa
     private Graphnode previous; //Viite edelt‰v‰‰n solmuun lyhyimm‰ll‰ reitill‰.
-    private int inListValue;    //T‰m‰ luku kertoo vuoronumeron jolla t‰m‰ solmu lis‰ttiin jonoon.
-    private int expandedValue;  //T‰m‰ luku kertoo vuoronumeron jolla t‰m‰ solmu k‰siteltiin.
+    private List<Integer> inListValues;    //T‰m‰ luku kertoo vuoronumeron jolla t‰m‰ solmu lis‰ttiin jonoon.
+    private List<Integer> expandedValues;  //T‰m‰ luku kertoo vuoronumeron jolla t‰m‰ solmu k‰siteltiin.
+    private int expansions;     //T‰m‰ luku kertoo kuinka monta kertaa t‰m‰ solmu k‰siteltiin (Fringe Search)
     
     /**
      * Luo uuden verkon solmun. Tarvitsee koordinaatit, jotka ovat suhteellisia
@@ -31,14 +32,20 @@ public class Graphnode {
      */
     public Graphnode(int y, int x) {
         this.neighbors = new ArrayList<>();
-        this.expanded = false;
-        this.distance = Integer.MAX_VALUE;
         this.HDistance = Integer.MAX_VALUE;
         this.x = x;
         this.y = y;
+        reset();
+    }
+    
+    public void reset() {
+        this.expansions = 0;
+        this.expanded = false;
+        this.distance = Integer.MAX_VALUE;
         this.inQ = 0;
-        this.inListValue = Integer.MAX_VALUE;
-        this.expandedValue = Integer.MAX_VALUE;
+        this.inListValues = new ArrayList<>();
+        this.expandedValues = new ArrayList<>();
+        this.previous = null;
     }
     
     public void addNeighbor(Graphnode neighbor) {
@@ -55,18 +62,23 @@ public class Graphnode {
 
     public void setExpanded() {
         this.expanded = true;
+        this.expansions++;
+    }
+    
+    public void notExpanded() {
+        this.expanded = false;
     }
 
     public void setPrevious(Graphnode previous) {
         this.previous = previous;
     }
 
-    public void setInListValue(int inListValue) {
-        this.inListValue = inListValue;
+    public void addInListValue(int inListValue) {
+        this.inListValues.add(inListValue);
     }
 
-    public void setExpandedValue(int expandedValue) {
-        this.expandedValue = expandedValue;
+    public void addExpandedValue(int expandedValue) {
+        this.expandedValues.add(expandedValue);
     }
     
     public void isInQ() {
@@ -113,16 +125,16 @@ public class Graphnode {
         return previous;
     }
 
-    public int getInListValue() {
-        return inListValue;
+    public List<Integer> getInListValues() {
+        return inListValues;
     }
 
-    public int getExpandedValue() {
-        return expandedValue;
+    public List<Integer> getExpandedValues() {
+        return expandedValues;
     }
     
     @Override
     public String toString() {
-        return "Graphnode{" + "x=" + x + ", y=" + y + "} dist="+distance;
+        return "(" + x + ", " + y + ", "+distance+")";
     }
 }
