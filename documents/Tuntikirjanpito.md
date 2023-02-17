@@ -8,3 +8,5 @@
 |9.2| 2h| Fringe Searchin tukiskelua. Toteutuksen rakenne.|
 |11.2 | 6h| Algoritmien parantelua. Käyttöliittymän parantelua. |
 |12.2|7h| Algortimit esiteltävään kuntoon. Dokumentointia. |
+|15.2|2h| Fringe Searching alustusta. |
+|17.2|2h| A* virheet kuntoon, käyttöliittymän hiomista. Fringe Search toteutusta. |
