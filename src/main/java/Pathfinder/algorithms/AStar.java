@@ -2,12 +2,10 @@ package Pathfinder.algorithms;
 
 import Pathfinder.domain.Graphnode;
 import Pathfinder.utility.GraphBuilder;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * A* algoritmin toteuttava luokka. Perii luokan 'Dijkstra'. Toteutus
- * eroaa ainoastaan 'adjust' metodin osalta.
+ * eroaa 'adjust'- ja 'addNode'-metodien osalta.
  * @author lasse
  */
 public class AStar extends Dijkstra {
@@ -22,16 +20,20 @@ public class AStar extends Dijkstra {
      */
     @Override
     public boolean adjust(Graphnode next, int newDist) {
-        if (newDist >= next.getDistance()) {
+        if (newDist > next.getDistance()) {
             return false;
         }
         next.setDistance(newDist);
         int ny = next.getY();
         int nx = next.getX();
-        super.q.add(new int[]{newDist+next.getHDistance(), ny, nx});
+        super.q.add(new int[]{newDist+next.getHDistance(), ny, nx});            //f(x) = g(x) + h(x) (erona dijkstraan, jossa f(x) = g(x))
         return true;
     }
     
+    /**
+     * Lis‰‰ solmun solverin AStar listaan (A*:n tarkastellut solmut tarkasteluj‰rjestyksess‰)
+     * @param node 
+     */
     @Override
     public void addNode(Graphnode node) {
         solver.addAStarNode(node);

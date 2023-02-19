@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -12,6 +13,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" style="-fx-background-color: grey;" stylesheets="@../styles/style.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Pathfinder.controllers.MainviewController">
    <children>
@@ -19,8 +21,31 @@
          <children>
             <VBox fx:id="sidebar" alignment="TOP_CENTER" spacing="20.0" styleClass="sideBar">
                <children>
-                  <Button fx:id="bawButton" mnemonicParsing="false" onAction="#swapColorBaw" styleClass="sideButton" />
-                  <Button layoutX="25.0" layoutY="110.0" mnemonicParsing="false" styleClass="sideButton" />
+                  <Button fx:id="bawButton" maxHeight="50.0" mnemonicParsing="false" onAction="#changeBaw" styleClass="sideButton">
+                     <graphic>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true">
+                           <image>
+                              <Image url="@../baw.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Button fx:id="animateButton" layoutX="25.0" layoutY="110.0" mnemonicParsing="false" onAction="#changeAnimated" styleClass="sideButton">
+                     <graphic>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Anim">
+                           <font>
+                              <Font name="Broadway" size="14.0" />
+                           </font>
+                        </Text>
+                     </graphic></Button>
+                  <Button fx:id="heuristicButton" layoutX="25.0" layoutY="184.0" mnemonicParsing="false" onAction="#changeHeuristic" styleClass="sideButton">
+                     <graphic>
+                        <ImageView fx:id="heuristicImage" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../euclidean.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
                <padding>
                   <Insets left="10.0" top="100.0" />

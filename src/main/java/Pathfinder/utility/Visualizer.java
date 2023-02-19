@@ -6,19 +6,14 @@ import Pathfinder.domain.Graphnode;
 import Pathfinder.domain.NodeAnimation;
 import java.util.List;
 import javafx.animation.Animation.Status;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
 
 /**
- * T‰m‰ luokka vastaa algoritmin polkuja tai etenemist‰ vastaavan 
+ * T‰m‰ luokka vastaa algoritmin polkuja tai etenemist‰ kuvaavan 
  * graafisen esityksen luomisesta.
  * @author lasse
  */
@@ -30,8 +25,7 @@ public class Visualizer {
     private ImageView[] dotImages;
     
     /**
-     * Konstruktori saa parametreinaan verkon ja viitteen kuvan‰kym‰st‰ johon
-     * piirretty reittikuva sijoitetaan
+     * Konstruktori saa parametrikseen viitteen p‰‰n‰kym‰n kontrollerista
      * @param controller 
      */
     public Visualizer(MainviewController controller) {
@@ -80,41 +74,35 @@ public class Visualizer {
      * animaatioina Timeline-luokan avulla.
      */
     public void visualize(Solver solver) {
-        if (controller.dijkstra.getStyleClass().contains("toggledTopbutton")
-                && visualizeDijkstra(solver.getDijkstraNodes())) {
+        System.out.println("Kutsuttiin visualisointia");
+        if (controller.dijkstra.getStyleClass().contains("toggledButton")
+                && visualizeAlgorithm(solver.getDijkstraNodes(), 0)) {
             animations[0].animate();
         }
-        if (controller.aStar.getStyleClass().contains("toggledTopbutton")
-                && visualizeAStar(solver.getAStarNodes())) {
+        if (controller.aStar.getStyleClass().contains("toggledButton")
+                && visualizeAlgorithm(solver.getAStarNodes(), 1)) {
             animations[1].animate();
         }
+        if (controller.fringeSearch.getStyleClass().contains("toggledButton")
+                && visualizeAlgorithm(solver.getFringeSearchNodes(), 2)) {
+            animations[2].animate();
+        }
     }
     
     /**
-     * Luo animaation Dijkstran algoritmin etenemisest‰
+     * Yksitt‰isen algoritmin esityksen luominen (num: 0 = Dijkstra, 1 = A* 2 = Fringe search)
      * @param nodes
+     * @param num
      * @return 
      */
-    public boolean visualizeDijkstra(List<Graphnode> nodes) {
-        if (this.animations[0] != null && this.animations[0].getAnimation().getStatus() == Status.RUNNING) {
+    private boolean visualizeAlgorithm(List<Graphnode> nodes, int num) {
+        System.out.println("Visualisoidaan algoritmi "+num);
+        if (this.animations[num] != null && this.animations[num].getAnimation().getStatus() == Status.RUNNING) {
             return false;
         }
-        this.animations[0] = new NodeAnimation(nodes, height, width, Color.BLACK);
-        this.dotImages[0].setImage(animations[0].getAnimationView());
-        return true;
-    }
-    
-    /**
-     * Luo animaation A* algoritmine etenemisest‰
-     * @param nodes
-     * @return 
-     */
-    public boolean visualizeAStar(List<Graphnode> nodes) {
-        if (this.animations[1] != null && this.animations[1].getAnimation().getStatus() == Status.RUNNING) {
-            return false;
-        }
-        this.animations[1] = new NodeAnimation(nodes, height, width, Color.CORAL);
-        this.dotImages[1].setImage(animations[1].getAnimationView());
+        Color c = (num == 0 ? Color.BLACK : (num == 1 ? Color.CORAL : Color.AQUAMARINE));
+        this.animations[num] = new NodeAnimation(nodes, height, width, c);
+        this.dotImages[num].setImage(animations[num].getAnimationView());
         return true;
     }
 }

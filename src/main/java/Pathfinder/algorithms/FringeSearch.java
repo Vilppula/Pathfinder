@@ -12,14 +12,15 @@ import java.util.Deque;
 public class FringeSearch implements Calculable {
 
     private GraphBuilder builder;
+    private Solver solver;
     private Deque<Graphnode> now;
     private Deque<Graphnode> later;
-    private Graphnode goal;
     private int treshold;
     private boolean found;
     
-    public FringeSearch(GraphBuilder builder) {
+    public FringeSearch(GraphBuilder builder, Solver solver) {
         this.builder = builder;
+        this.solver = solver;
     }
     
     /**
@@ -34,55 +35,69 @@ public class FringeSearch implements Calculable {
     public boolean calculate(int ay, int ax, int by, int bx) {
         this.now = new ArrayDeque<>();
         this.later = new ArrayDeque<>();
-        goal = builder.getGraphnode(by, bx);
         Graphnode root = builder.getGraphnode(ay, ax);
         treshold = root.getHDistance();                                         //Ensimm‰isen iteraation raja-arvoksi tulee l‰htˆsolmun heuristinen et‰isyys maalisolmusta..
         root.setDistance(0);                                                    //Alkusomun et‰isyys on 0
-        found = false;  
+        now.add(root);
+        root.isInQ();
         
-        
-        while (!found) {
-        //Lue solmu jonosta now
-        Graphnode head = now.pollFirst();
-        for (Graphnode next: head.getNeighbors()) {                             //Luetaan solmun node naapurit
-            if (search(head, next)) {
-                if (found) {
+        while (!now.isEmpty()) {
+            int newTreshold = Integer.MAX_VALUE;                                //Talletetaan uusi totuudenmukaisempi raja-arvo t‰h‰n muuttujaan.
+            addNode(null);                                                      //Lis‰t‰‰n null merkiksi uuden iteraation alkamisesta. T‰m‰ on visualisoinnin kannalta parasta.
+            while (!now.isEmpty()) {                                            //Niin kauan kuin jonossa 'now' on solmuja, k‰yd‰‰n ne l‰pi
+                Graphnode head = now.poll();
+                addNode(head);
+                if (head.getY() == by && head.getX() == bx) {                   //Tarkasta onko maalisolmu
                     return true;
                 }
+                int f = head.getDistance() + head.getHDistance();               //Arvo f on summa 'solmun head et‰isyys l‰htˆsolmusta + heuristinen et‰isyys maaliin'.
+                if (f > treshold) {                                             //Jos solmun f-arvo ylitt‰‰ raja-arvon, siirr‰ listalle 'later'...
+                    later.add(head);
+                    newTreshold = Math.min(newTreshold, f);
+                    continue;
+                }
+                addNode(head);                                                  //...muuten lis‰t‰‰n solmu 'head' k‰sitteltyjen listalle...
+                for (Graphnode next: head.getNeighbors()) {                     //...k‰yd‰‰n l‰pi sen naapurit...
+                    if (next == head.getPrevious()) {
+                        continue;
+                    }
+                    int newDist = head.getDistance() +                          //...lasketaan uusi et‰isyys naapurisolmulle solmun 'head' kautta...
+                            (next.getX() != head.getX()
+                                && next.getY() != head.getY() ? 141 : 100);
+                    if (adjust(next, newDist)) {                                //...yritet‰‰n muuttaa naapurin et‰isyysarvoa...
+                        now.add(next);                                          //...ja jos se onnistuu, lis‰t‰‰n naapuri listalle 'now'...
+                        next.isInQ();
+                        next.setPrevious(head);                                 //...merkit‰‰n naapurin edelt‰j‰ksi solmu 'head'
+                    }
+                }
             }
+            while (!later.isEmpty()) {
+                now.add(later.poll());
+            }
+            treshold = newTreshold;                                             //P‰ivitet‰‰n raja-arvo vastaamaan parasta lˆydetty‰ f-arvoa
         }
-        
-        
-        //Jos maalia ei lˆydetty t‰ll‰ iteraatiolla, tee jonosta 'later' jono 'now'
-        for (Graphnode laterNode: later) {
-            now.addLast(laterNode);
-        }
-        
-        }
-        
         return false;
     }
     
     /**
-     * Rekursiivinen metodi. K‰yd‰‰n l‰pi solmun node lapset vasemmalta oikealle.
-     * @param previous
+     * Fringe Searchin adjust-metodi
      * @param node
+     * @param newDist
      * @return 
      */
-    public boolean search(Graphnode previous, Graphnode node) {
-        if (node == goal) {
-            found = true;
-            return true;
+    public boolean adjust(Graphnode node, int newDist) {
+        if (newDist >= node.getDistance()) {
+            return false;
         }
-        for (Graphnode next: node.getNeighbors()) {
-            if (search(node, next)) {
-                return true;
-            }
-        }
-        return false;
+        node.setDistance(newDist);
+        return true;
     }
-
-    public boolean adjust(Graphnode grphnd, int i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    /**
+     * Lis‰‰ solmun solverin FringeSearchNodes-listalle. Solmut tulevat listalle k‰sittelyj‰rjestyksess‰.
+     * @param node 
+     */
+    public void addNode(Graphnode node) {
+        solver.addFringeSearchNode(node);
     }
 }

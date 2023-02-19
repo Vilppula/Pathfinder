@@ -1,5 +1,6 @@
 package Pathfinder.domain;
 
+import Pathfinder.utility.Settings;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class Graphnode {
      */
     public Graphnode(int y, int x) {
         this.neighbors = new ArrayList<>();
-        this.HDistance = Integer.MAX_VALUE;
+        this.HDistance = Settings.maxInt;
         this.x = x;
         this.y = y;
         reset();
@@ -41,7 +42,7 @@ public class Graphnode {
     public void reset() {
         this.expansions = 0;
         this.expanded = false;
-        this.distance = Integer.MAX_VALUE;
+        this.distance = Settings.maxInt;  //Korjataan maksimiarvoa ettei kokonaisluvuilla laskeminen vie arvoa yli maksimin
         this.inQ = 0;
         this.inListValues = new ArrayList<>();
         this.expandedValues = new ArrayList<>();
@@ -135,6 +136,6 @@ public class Graphnode {
     
     @Override
     public String toString() {
-        return "(" + x + ", " + y + ", "+distance+")";
+        return "(x:" + x + ", y:" + y + ", d:"+distance+")";
     }
 }

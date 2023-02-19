@@ -5,6 +5,7 @@
  */
 package Pathfinder.algorithms;
 
+import Pathfinder.domain.Graphnode;
 import Pathfinder.utility.GraphBuilder;
 import Pathfinder.utility.Settings;
 import org.junit.jupiter.api.AfterEach;
@@ -24,7 +25,13 @@ public class SolverTest {
     GraphBuilder builder;
     Settings settings;
     int[][] map = new int[100][100];
-    
+    int[][] map2 = {
+        {0,1,0,1,0,1,0,1,0,1,0,1},
+        {0,1,0,1,0,1,0,1,0,1,0,1},
+        {0,1,0,1,0,1,0,1,0,1,0,1},
+        {0,1,0,1,0,1,0,1,0,1,0,1},
+        {1,0,1,0,1,0,1,0,1,0,1,0}
+    };
     public SolverTest() {
         settings = new Settings();
         builder  = new GraphBuilder(settings);
@@ -105,6 +112,21 @@ public class SolverTest {
         assertFalse(solver.getAStarNodes().isEmpty());
     }
     
+    @Test
+    public void kaikkiAlgoritmitLoytavatLyhyimmanReitin() {
+        builder.loadMap(map2);
+        solver.addA(0, 0);
+        solver.addB(builder.getHeight()-1, builder.getWidth()-1);
+        solver.dijkstra();
+        solver.solve();
+        int pathNodes = countRouteNodes(builder.getHeight()-1, builder.getWidth()-1);
+        builder.reset();
+        solver.dijkstra();
+        solver.aStar();
+        solver.solve();
+        assertEquals(pathNodes, countRouteNodes(builder.getHeight()-1, builder.getWidth()-1));
+    }
+    
 //    @Test
 //    public void fringeSearchVoidaanKytkeaPaalleJaPois() {
 //        solver.fringeSearch();
@@ -113,6 +135,16 @@ public class SolverTest {
 //        solver.fringeSearch();
 //        assertFalse(solver.solve());
 //    }
+    
+    public int countRouteNodes(int by, int bx) {
+        Graphnode node = builder.getGraphnode(by, bx);
+        int nodes = 0;
+        while(node.getPrevious() != null) {
+            nodes++;
+            node = node.getPrevious();
+        }
+        return nodes;
+    }
     
     public void validPoints() {
         solver.addA(10, 10);

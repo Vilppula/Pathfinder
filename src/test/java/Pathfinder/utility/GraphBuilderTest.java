@@ -51,7 +51,7 @@ public class GraphBuilderTest {
     }
     
     @Test
-    public void createMetodiLuoTaulukonJokaSis‰lt‰‰GraphnodeOlioita() {
+    public void createMetodiLuoTaulukonJokaSisaltaaGraphnodeOlioita() {
         assertFalse(builder.getGraphnode(50, 50) == null);
     }
     
@@ -63,13 +63,13 @@ public class GraphBuilderTest {
     }
     
     @Test
-    public void heuristicMetodiEiLaskeEt‰isyyksi‰JosKarttaaEiOleLadattu() {
+    public void heuristicMetodiEiLaskeEtaisyyksiaJosKarttaaEiOleLadattu() {
         builder.eraseMap();
         assertFalse(this.builder.heuristic(10, 10));
     }
     
     @Test
-    public void heuristicMetodiEiLaskeEt‰isyyksi‰JosValittuPisteOnKartanUlkopuolella() {
+    public void heuristicMetodiEiLaskeEtaisyyksiaJosValittuPisteOnKartanUlkopuolella() {
         assertFalse(this.builder.heuristic(-1, -1));
         assertFalse(this.builder.heuristic(101, 101));
     }
@@ -86,12 +86,12 @@ public class GraphBuilderTest {
     }
     
     @Test
-    public void builderLaskeeSopivanHeuristisenEt‰isyysarvionSolmuille() {
+    public void builderLaskeeSopivanHeuristisenEtaisyysarvionSolmuille() {
         assertTrue(builder.heuristic(10, 10));
         Graphnode node1 = builder.getGraphnode(20, 20);
         Graphnode node2 = builder.getGraphnode(60, 88);
-        assertEquals(2000, node1.getHDistance());
-        assertEquals(12800, node2.getHDistance());
+        assertEquals((int)(Math.sqrt(10*10+10*10)*100), node1.getHDistance());
+        assertEquals((int)(Math.sqrt(50*50+78*78)*100), node2.getHDistance());
     }
     
     @Test
@@ -122,7 +122,7 @@ public class GraphBuilderTest {
     }
     
     @Test
-    public void solmullaOnOikeaM‰‰r‰Naapureita() {
+    public void solmullaOnOikeaMaaraNaapureita() {
         builder.loadMap(map2);
         Graphnode node = builder.getGraphnode(1, 0);
         assertEquals(4, node.getNeighbors().size());
@@ -139,8 +139,8 @@ public class GraphBuilderTest {
         builder.getGraphnode(50, 50).setDistance(1000);
         builder.getGraphnode(80, 77).setDistance(1000);
         builder.reset();
-        assertEquals(Integer.MAX_VALUE, builder.getGraphnode(50, 50).getDistance());
-        assertEquals(Integer.MAX_VALUE, builder.getGraphnode(80, 77).getDistance());
+        assertEquals(Settings.maxInt, builder.getGraphnode(50, 50).getDistance());
+        assertEquals(Settings.maxInt, builder.getGraphnode(80, 77).getDistance());
     }
     
     @Test

@@ -32,7 +32,7 @@ public class NodeAnimation {
      * @param color 
      */
     public NodeAnimation(List<Graphnode> nodes, int height, int width, Color color) {
-        System.out.println("Luodaan uusi animaatio värillä "+color);
+        System.out.println("Luodaan uusi animaatio värillä "+color+" listan pituudelle "+nodes.size());
         this.nodes = nodes;
         this.frame = 0;
         this.height = height;

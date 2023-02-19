@@ -1,6 +1,7 @@
 package Pathfinder.utility;
 
 import Pathfinder.domain.Graphnode;
+import Pathfinder.utility.Settings.Heuristic;
 import java.util.List;
 
 /**
@@ -100,12 +101,15 @@ public class GraphBuilder {
                 if (nodemap[i][j] == null) {
                     continue;
                 }
-                if (settings.heuristic == settings.heuristic.MANHATTAN) {
-                    nodemap[i][j].setHDistance((Math.abs((i-by)+(j-bx)))*100);        //Manhattan-etäisyys
-                } else if (settings.heuristic == settings.heuristic.EUCLIDEAN) {
-                        nodemap[i][j].setHDistance((int) 
-                                Math.sqrt((i-by)^2 + (j-bx)^2)                  //Euklidinen etäisyys (pyöristys kokonaisluvuksi)
-                        );
+                if (settings.getHeuristic() == Heuristic.MANHATTAN) {
+                    nodemap[i][j].setHDistance((Math.abs(i-by)+Math.abs(j-bx))*100);        //Manhattan-etäisyys
+                } 
+                else if (settings.getHeuristic() == Heuristic.EUCLIDEAN) {
+                    nodemap[i][j].setHDistance(
+                        (int) (Math.sqrt(
+                            ((i-by)*(i-by) + (j-bx)*(j-bx))                     //Euklidinen etäisyys (pyöristys kokonaisluvuksi)
+                        )*100)               
+                    );
                 }
             }
         }

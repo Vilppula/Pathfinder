@@ -61,16 +61,16 @@ public class DijkstraTest {
     
     @Test
     public void maalisolmunEtaisyysLasketaanOikein() {
-        assertEquals(Integer.MAX_VALUE, builder.getGraphnode(2, 6).getDistance());
+        assertEquals(Settings.maxInt, builder.getGraphnode(2, 6).getDistance());
         algorithm.calculate(0, 0, 2, 6);
         assertEquals(823, builder.getGraphnode(2, 6).getDistance());
     }
     
     @Test
-    public void algoritmiEiLaskeEnemp‰‰Et‰isyyksi‰KunMaalisolmunOnLoydetty() {
-        assertEquals(Integer.MAX_VALUE, builder.getGraphnode(2, 7).getDistance());
+    public void algoritmiEiLaskeEnempaaEtaisyyksiaKunMaalisolmunOnLoydetty() {
+        assertEquals(Settings.maxInt, builder.getGraphnode(2, 7).getDistance());
         algorithm.calculate(0, 0, 2, 6);
-        assertEquals(Integer.MAX_VALUE, builder.getGraphnode(2, 7).getDistance());
+        assertEquals(Settings.maxInt, builder.getGraphnode(2, 7).getDistance());
     }
     
     @Test
@@ -92,7 +92,7 @@ public class DijkstraTest {
     }
     
     @Test
-    public void algoritmiParantaaSolmunEt‰isyytt‰() {
+    public void algoritmiParantaaSolmunEtaisyytta() {
         algorithm.calculate(0, 0, 2, 6);
         assertTrue(algorithm.adjust(builder.getGraphnode(1, 0), 90));
     }

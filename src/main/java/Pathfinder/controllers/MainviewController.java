@@ -1,10 +1,12 @@
 package Pathfinder.controllers;
 
 import Pathfinder.algorithms.Solver;
+import Pathfinder.domain.Graphnode;
 import Pathfinder.utility.Visualizer;
 import Pathfinder.utility.GraphBuilder;
 import Pathfinder.utility.MapHandler;
 import Pathfinder.utility.Settings;
+import Pathfinder.utility.Settings.Heuristic;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
@@ -38,9 +40,9 @@ public class MainviewController implements Initializable {
     private MapHandler mapHandler;
     private Solver solver;
     
-    @FXML public Button dijkstra, aStar, fringeSearch;
+    @FXML public Button dijkstra, aStar, fringeSearch, bawButton, animateButton;
     @FXML Pane mainArea;
-    @FXML public ImageView mapImage, bawImage, routeImage, dotImage, dotImage2, dotImage3;
+    @FXML public ImageView mapImage, bawImage, routeImage, dotImage, dotImage2, dotImage3, heuristicImage;
     @FXML Pane map, stickerLayer;
     @FXML Label coordinates, colorLabel;
     @FXML Canvas canvas;
@@ -59,6 +61,9 @@ public class MainviewController implements Initializable {
         
     }
     
+    /**
+     * Dijkstra p‰‰lle/pois
+     */
     @FXML
     public void dijkstra() {
         toggleButton = dijkstra;
@@ -66,6 +71,9 @@ public class MainviewController implements Initializable {
         changeToggle();
     }
     
+    /**
+     * A* p‰‰lle/pois
+     */
     @FXML
     public void aStar() {
         toggleButton = aStar;
@@ -73,6 +81,9 @@ public class MainviewController implements Initializable {
         changeToggle();
     }
     
+    /**
+     * Fringe Search p‰‰lle/pois
+     */
     @FXML
     public void fringeSearch() {
         toggleButton = fringeSearch;
@@ -81,16 +92,95 @@ public class MainviewController implements Initializable {
     }
     
     /**
+     * Mustavalkokuva p‰‰lle/pois
+     */
+    @FXML
+    public void changeBaw() {
+        mapImage.setVisible(!mapImage.isVisible());
+        bawImage.setVisible(!bawImage.isVisible());
+        toggleButton = bawButton;
+        changeToggle();
+    }
+    
+    /**
+     * Animaatio p‰‰lle/pois
+     */
+    @FXML
+    public void changeAnimated() {
+        settings.setAnimated(!settings.isAnimated());
+        toggleButton = animateButton;
+        changeToggle();
+    }
+    
+    /**
+     * Vaihtaa eri heuristiikkojen v‰lill‰.
+     */
+    public void changeHeuristic() {
+        this.settings.changeHeuristic();
+        if (settings.getHeuristic() == Heuristic.EUCLIDEAN) {
+            heuristicImage.setImage(new Image("/euclidean.png"));
+        }
+        else if (settings.getHeuristic() == Heuristic.MANHATTAN) {
+            heuristicImage.setImage(new Image("/manhattan.png"));
+        }
+    }   
+    
+    /**
+     * Algoritmien valintapainikkeet: p‰‰ll‰/ pois p‰‰lt‰
+     */
+    public void changeToggle() {
+        if (toggleButton.getStyleClass().contains("toggledButton")) {
+            toggleButton.getStyleClass().remove("toggledButton");
+        } else {
+            toggleButton.getStyleClass().add("toggledButton");
+        }
+    }
+    
+    /**
      * Solve painikketta painettaessa kutsutaan t‰t‰ metodia.
-     * Pyyt‰‰ apuluokkia ratkaisemaan ja piirt‰m‰‰n reitin.
+     * Pyyt‰‰ apuluokkia ratkaisemaan ja tarvittaessa piirt‰m‰‰n reitin.
      */
     @FXML
     public void solve() {
-        if (!solver.solve()) {             //Solver ratkaisee reitin algoritmien avulla
-            System.out.println("Ei voitu laskea reitti‰");
-            return;
-        }          
-        visualizer.visualize(solver);             //Visualisoidaan algoritmien eteneminen
+//        if (!solver.solve()) {             //Solver ratkaisee reitin algoritmien avulla
+//            System.out.println("Ei voitu laskea reitti‰");
+//            return;
+//        }  
+
+//int[][] testMap = {
+//        {0,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
+//        {0,1,0,0,1,1,0,1,0,1,1,1,1,1,0},
+//        {0,0,1,1,1,0,1,1,0,1,0,0,0,0,1},
+//        {1,0,1,0,1,0,1,1,0,0,1,0,1,0,1},
+//        {0,1,1,0,1,0,0,0,1,0,0,1,0,1,0},
+//        {0,1,0,1,0,1,1,1,1,0,1,1,0,1,0},
+//        {0,0,1,0,1,0,0,0,0,0,0,0,0,0,1} 
+//    };
+//        graph.loadMap(testMap);
+//        solver.fringeSearch();
+//        solver.addA(0, 0);
+//        solver.addB(5, 12);
+//        solver.solve();
+//        int[][] route = new int[testMap.length][testMap[0].length];
+//        System.arraycopy(testMap, 0, route, 0, 6);
+//        
+//        Graphnode g = graph.getGraphnode(5, 12);
+//        while (g != null) {
+//            route[g.getY()][g.getX()] = 2;
+//            g = g.getPrevious();
+//        }
+//        for (int i=0;i < route.length; i++) {
+//            for (int j = 0; j < route[0].length; j++) {
+//                System.out.print((route[i][j] == 0 ? " " : (route[i][j] == 1 ? "#" : "s")));
+//            }
+//            System.out.println("");
+//        }
+
+
+        solver.solve();
+        if (settings.isAnimated()) {
+            visualizer.visualize(solver);       //Visualisoidaan algoritmien eteneminen
+        }
         this.visualizer.drawRoute(solver.getBy(), solver.getBx());  //Piirret‰‰n reitti
     }
     
@@ -126,18 +216,6 @@ public class MainviewController implements Initializable {
         map.setCursor(cursor);
     }
     
-   
-    /**
-     * Algoritmien valintapainikkeet: p‰‰ll‰/ pois p‰‰lt‰
-     */
-    public void changeToggle() {
-        if (toggleButton.getStyleClass().contains("toggledTopbutton")) {
-            toggleButton.getStyleClass().remove("toggledTopbutton");
-        } else {
-            toggleButton.getStyleClass().add("toggledTopbutton");
-        }
-    }
-    
     /**
      * Vaihtaa kursorin kuvaa A (punainen) <-> B (vihre‰).
      */
@@ -146,19 +224,6 @@ public class MainviewController implements Initializable {
             cursor = cursorB;
         } else {
             cursor = cursorA;
-        }
-    }
-    
-    /**
-     * Vaihda karttan‰kym‰‰ alkuper‰inen <-> mustavalkoinen
-     */
-    public void swapColorBaw() {
-        if (this.mapImage.isVisible()) {
-            this.mapImage.setVisible(false);
-            this.bawImage.setVisible(true);
-        } else {
-            this.mapImage.setVisible(true);
-            this.bawImage.setVisible(false);
         }
     }
     
@@ -186,12 +251,14 @@ public class MainviewController implements Initializable {
         solver = new Solver(graph, settings);               //Luo reitinratkaisija
         visualizer = new Visualizer(this);                  //Luo piirt‰j‰
         mapHandler = new MapHandler();
-        changeMap(new Image("/Maze1.png"));
-        
+        changeMap(new Image("/testMap.jpg"));
+        //this.fringeSearch.setDisable(true);
         cursor = cursorA;
         map.setCursor(cursor);
         mapImage.setImage(mapHandler.getOriginal());
         bawImage.setImage(mapHandler.getBlackAndWhite());
+        mapImage.setVisible(true);
+        bawImage.setVisible(false);
         map.setOnMouseMoved(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent t) {

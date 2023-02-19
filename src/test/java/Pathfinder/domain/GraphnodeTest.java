@@ -1,5 +1,6 @@
 package Pathfinder.domain;
 
+import Pathfinder.utility.Settings;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,20 +50,19 @@ public class GraphnodeTest {
     
     @Test
     public void solmunAloitusEtaisyysOnMahdollisimmanSuuri() {
-        assertTrue(this.node.getDistance() == Integer.MAX_VALUE);
-        assertTrue(this.node.getHDistance() == Integer.MAX_VALUE);
+        assertTrue(this.node.getDistance() == Settings.maxInt);
     }
     
     @Test
     public void solmulleVoidaanLaskeaUusiEtaisyys() {
-        assertTrue(this.node.getDistance() == Integer.MAX_VALUE);
+        assertTrue(this.node.getDistance() == Settings.maxInt);
         this.node.setDistance(10);
         assertEquals(10, this.node.getDistance());
     }
     
     @Test
     public void solmulleVoidaanAntaaEtaisyysArvio() {
-        assertTrue(this.node.getHDistance() == Integer.MAX_VALUE);
+        assertTrue(this.node.getHDistance() == Settings.maxInt);
         this.node.setHDistance(10);
         assertEquals(10, this.node.getHDistance());
     }

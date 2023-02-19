@@ -31,7 +31,7 @@ public class AStarTest extends DijkstraTest {
     }
     
     @Test
-    public void algoritmiParantaaSolmunEtäisyyttä() {
+    public void algoritmiParantaaSolmunEtaisyytta() {
         algorithm.calculate(0, 0, 2, 6);
         assertTrue(algorithm.adjust(builder.getGraphnode(1, 0), 90));
     }
