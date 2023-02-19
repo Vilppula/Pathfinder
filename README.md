@@ -41,5 +41,6 @@ Koodin laatutarkistus tehdään checkstylellä. Checkstyle raportti löytyy html
 
 [Viikko 3](https://github.com/Vilppula/Pathfinder/blob/master/documents/Viikkoraportti%203.md)  
 
-[Viikko 4](https://github.com/Vilppula/Pathfinder/blob/master/documents/Viikkoraportti%204.md)
+[Viikko 4](https://github.com/Vilppula/Pathfinder/blob/master/documents/Viikkoraportti%204.md)  
 
+[Viikko 5](https://github.com/Vilppula/Pathfinder/blob/master/documents/Viikkoraportti%205.md)
