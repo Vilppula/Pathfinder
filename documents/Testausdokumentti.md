@@ -18,7 +18,7 @@ Apuluokka [Solver]() koostaa algoritmien suorituksen. Testeissä varmistetaan oi
 
 Algoritmien testaaminen on integraatiotestausta. Algoritmien testit väistämättä kohdistuvat myösalgortimin toiminnan perustana olevaan verkkoon ja siitä vastaaviin luokkiin. Testiluokka [DijkstraTest](https://github.com/Vilppula/Pathfinder/blob/master/src/test/java/Pathfinder/algorithms/DijkstraTest.java) testaa [Dijkstran algoritmin](https://github.com/Vilppula/Pathfinder/blob/master/src/main/java/Pathfinder/algorithms/Dijkstra.java) kykyä löytää lyhyin reitti. Koska [A*](https://github.com/Vilppula/Pathfinder/blob/master/src/main/java/Pathfinder/algorithms/AStar.java) on erikoistapaus Dijkstran algoritmista, toteutetaan samat [testit](https://github.com/Vilppula/Pathfinder/blob/master/src/test/java/Pathfinder/algorithms/AStarTest.java) myös kyseiselle luokalle.
 ### Syötteet
-Syötteitä tarkastellaan tulevassa päivityksessä.
+Algoritmien testeille annetaan virheellisiä koordinaatteja, sekä niitä testataan lataamalla verkon generoivalle GraphBuilder-luokalle erilaisia kaksiulotteisia taulukoita.
 
 ### Testien toistaminen
 Testit voidaan toistaa komennolla
