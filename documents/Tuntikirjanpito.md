@@ -10,3 +10,5 @@
 |12.2|7h| Algortimit esiteltävään kuntoon. Dokumentointia. |
 |15.2|2h| Fringe Searching alustusta. |
 |17.2|7h| A* virheet kuntoon, käyttöliittymän hiomista. Fringe Search toteutusta. |
+|18.2|3h| Koodikatselmointi. Fringe Search ongelmien selvittämistä. Käyttöliittymäpäivitys.|
+|19.2|3h| Fringe Search debuggaus ja korjauksia. Dokumentointia. |
