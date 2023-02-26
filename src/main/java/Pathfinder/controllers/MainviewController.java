@@ -1,10 +1,10 @@
 package Pathfinder.controllers;
 
 import Pathfinder.algorithms.Solver;
-import Pathfinder.domain.Graphnode;
 import Pathfinder.utility.Visualizer;
 import Pathfinder.utility.GraphBuilder;
 import Pathfinder.utility.MapHandler;
+import Pathfinder.utility.Observer;
 import Pathfinder.utility.Settings;
 import Pathfinder.utility.Settings.Heuristic;
 import java.net.URL;
@@ -30,6 +30,7 @@ public class MainviewController implements Initializable {
     public GraphBuilder graph;
     private Settings settings;
     private Visualizer visualizer;
+    private Observer observer;
     
     private ImageCursor cursorA = new ImageCursor(new Image("/from.png"), 24, 44);
     private ImageCursor cursorB = new ImageCursor(new Image("/to.png"), 24, 44);
@@ -69,6 +70,7 @@ public class MainviewController implements Initializable {
         toggleButton = dijkstra;
         solver.dijkstra();
         changeToggle();
+        visualizer.clearVisualization(0);
     }
     
     /**
@@ -79,6 +81,7 @@ public class MainviewController implements Initializable {
         toggleButton = aStar;
         solver.aStar();
         changeToggle();
+        visualizer.clearVisualization(1);
     }
     
     /**
@@ -89,6 +92,7 @@ public class MainviewController implements Initializable {
         toggleButton = fringeSearch;
         solver.fringeSearch();
         changeToggle();
+        visualizer.clearVisualization(2);
     }
     
     /**
@@ -142,41 +146,6 @@ public class MainviewController implements Initializable {
      */
     @FXML
     public void solve() {
-//        if (!solver.solve()) {             //Solver ratkaisee reitin algoritmien avulla
-//            System.out.println("Ei voitu laskea reittiä");
-//            return;
-//        }  
-
-//int[][] testMap = {
-//        {0,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
-//        {0,1,0,0,1,1,0,1,0,1,1,1,1,1,0},
-//        {0,0,1,1,1,0,1,1,0,1,0,0,0,0,1},
-//        {1,0,1,0,1,0,1,1,0,0,1,0,1,0,1},
-//        {0,1,1,0,1,0,0,0,1,0,0,1,0,1,0},
-//        {0,1,0,1,0,1,1,1,1,0,1,1,0,1,0},
-//        {0,0,1,0,1,0,0,0,0,0,0,0,0,0,1} 
-//    };
-//        graph.loadMap(testMap);
-//        solver.fringeSearch();
-//        solver.addA(0, 0);
-//        solver.addB(5, 12);
-//        solver.solve();
-//        int[][] route = new int[testMap.length][testMap[0].length];
-//        System.arraycopy(testMap, 0, route, 0, 6);
-//        
-//        Graphnode g = graph.getGraphnode(5, 12);
-//        while (g != null) {
-//            route[g.getY()][g.getX()] = 2;
-//            g = g.getPrevious();
-//        }
-//        for (int i=0;i < route.length; i++) {
-//            for (int j = 0; j < route[0].length; j++) {
-//                System.out.print((route[i][j] == 0 ? " " : (route[i][j] == 1 ? "#" : "s")));
-//            }
-//            System.out.println("");
-//        }
-
-
         solver.solve();
         if (settings.isAnimated()) {
             visualizer.visualize(solver);       //Visualisoidaan algoritmien eteneminen
@@ -248,11 +217,11 @@ public class MainviewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         settings = new Settings();                          //Luo asetukset
         graph = new GraphBuilder(settings);                 //Luo verkon rakentaja
-        solver = new Solver(graph, settings);               //Luo reitinratkaisija
+        observer = new Observer();                          //Luo uusi statistiikka
+        solver = new Solver(graph, settings, observer);     //Luo reitinratkaisija
         visualizer = new Visualizer(this);                  //Luo piirtäjä
         mapHandler = new MapHandler();
         changeMap(new Image("/testMap.jpg"));
-        //this.fringeSearch.setDisable(true);
         cursor = cursorA;
         map.setCursor(cursor);
         mapImage.setImage(mapHandler.getOriginal());

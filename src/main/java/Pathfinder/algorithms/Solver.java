@@ -2,6 +2,7 @@ package Pathfinder.algorithms;
 
 import Pathfinder.domain.Graphnode;
 import Pathfinder.utility.GraphBuilder;
+import Pathfinder.utility.Observer;
 import Pathfinder.utility.Settings;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +24,10 @@ public class Solver {
     private List<Graphnode> dijkstraNodes;
     private List<Graphnode> aStarNodes;
     private List<Graphnode> fringeSearchNodes;
+    public Observer observer;
 
 
-    public Solver(GraphBuilder builder, Settings settings) {
+    public Solver(GraphBuilder builder, Settings settings, Observer observer) {
         this.dijkstra = new Dijkstra(builder, this);
         this.aStar = new AStar(builder, this);
         this.fringe = new FringeSearch(builder, this);
@@ -35,6 +37,7 @@ public class Solver {
         this.aStarNodes = new ArrayList<>();
         this.fringeSearchNodes = new ArrayList<>();
         this.algorithms = new ArrayList<>();
+        this.observer = observer;
         ax = ay = bx = by = -1;
     }
     
@@ -96,6 +99,7 @@ public class Solver {
         this.bx = bx; this.by = by;
     }
     
+    //==========================================================================
     /**
      * Metodia kutsutaan kun käyttöliittymän solve-painiketta on painettu.
      * Käy läpi valitut algoritmit.
@@ -111,13 +115,15 @@ public class Solver {
         }
         builder.heuristic(by, bx);
         for (Calculable c: this.algorithms) {
-            System.out.println("Ratkaistaan "+c.getClass());
-            builder.reset();
+            builder.reset();                                                    //Alusta verkon solmut (Graphnode-oliot) algoritmien välillä
+            observer.start(c);
             success = c.calculate(ay, ax, by, bx);
+            observer.stop(c);
         }
         return success;
     }
 
+    //==========================================================================
     /**
      * Lisätään solmuja listalle niiden käsittelyjärjestyksessä. Tämän avulla
      * visualisointi voidaan tehdä vastaavassa järjestyksessä.
@@ -127,6 +133,11 @@ public class Solver {
         this.dijkstraNodes.add(node);
     }
     
+    /**
+     * Lisätään A*:n käsittelemiä solmuja listalle niiden käsittely
+     * järjestyksessä.
+     * @param node 
+     */
     public void addAStarNode(Graphnode node) {
         this.aStarNodes.add(node);
     }

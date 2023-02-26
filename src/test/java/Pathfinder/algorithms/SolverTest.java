@@ -7,6 +7,7 @@ package Pathfinder.algorithms;
 
 import Pathfinder.domain.Graphnode;
 import Pathfinder.utility.GraphBuilder;
+import Pathfinder.utility.Observer;
 import Pathfinder.utility.Settings;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
@@ -40,7 +41,7 @@ public class SolverTest {
     
     @BeforeEach
     public void setUp() {
-        solver = new Solver(builder, settings);
+        solver = new Solver(builder, settings, new Observer());
         builder.loadMap(map);
     }
     

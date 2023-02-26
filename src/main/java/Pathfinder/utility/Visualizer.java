@@ -6,6 +6,7 @@ import Pathfinder.domain.Graphnode;
 import Pathfinder.domain.NodeAnimation;
 import java.util.List;
 import javafx.animation.Animation.Status;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelWriter;
@@ -23,6 +24,7 @@ public class Visualizer {
     private int width, height;
     private NodeAnimation[] animations;
     private ImageView[] dotImages;
+    private Button[] buttons;
     
     /**
      * Konstruktori saa parametrikseen viitteen p‰‰n‰kym‰n kontrollerista
@@ -34,6 +36,11 @@ public class Visualizer {
             controller.dotImage,
             controller.dotImage2,
             controller.dotImage3
+        };
+        this.buttons = new Button[] {
+            controller.dijkstra,
+            controller.aStar,
+            controller.fringeSearch
         };
         this.animations = new NodeAnimation[3]; 
     }
@@ -74,7 +81,6 @@ public class Visualizer {
      * animaatioina Timeline-luokan avulla.
      */
     public void visualize(Solver solver) {
-        System.out.println("Kutsuttiin visualisointia");
         if (controller.dijkstra.getStyleClass().contains("toggledButton")
                 && visualizeAlgorithm(solver.getDijkstraNodes(), 0)) {
             animations[0].animate();
@@ -96,13 +102,26 @@ public class Visualizer {
      * @return 
      */
     private boolean visualizeAlgorithm(List<Graphnode> nodes, int num) {
-        System.out.println("Visualisoidaan algoritmi "+num);
-        if (this.animations[num] != null && this.animations[num].getAnimation().getStatus() == Status.RUNNING) {
-            return false;
+        if (this.animations[num] != null) {
+            clearVisualization(num);
         }
-        Color c = (num == 0 ? Color.BLACK : (num == 1 ? Color.CORAL : Color.AQUAMARINE));
-        this.animations[num] = new NodeAnimation(nodes, height, width, c);
+        Color c = (num == 0 ? Color.BLACK : (num == 1 ? Color.CORAL : Color.BLACK));
+        this.animations[num] = new NodeAnimation(buttons[num], nodes, height, width, c);
         this.dotImages[num].setImage(animations[num].getAnimationView());
         return true;
+    }
+    
+    /**
+     * Poistaa edellisen visualisoinnin
+     * @param algorithmNumber 
+     */
+    public void clearVisualization(int algorithmNumber) {
+        if (this.dotImages[algorithmNumber].getImage() == null) {
+            return;
+        }
+        this.animations[algorithmNumber].getAnimation().stop();
+        this.dotImages[algorithmNumber].setImage(null);
+        this.animations[algorithmNumber] = null;
+        buttons[algorithmNumber].setStyle("-fx-background-color:#999999");
     }
 }

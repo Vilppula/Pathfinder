@@ -1,13 +1,21 @@
 .topbutton {
     -fx-pref-width: 200;
     -fx-pref-height: 60;
-    -fx-font-family: 'Georgia Bold';
+    -fx-font-family: 'Britannic Bold';
     -fx-font-size: 16;
     -fx-background-color:#999999;
     -fx-border-color:#0099cc;
     -fx-border-width: 5px;
     -fx-background-insets: 2 2 2 2;
     -fx-effect: dropshadow(three-pass-box, black, 4, 1, 2, 4);
+}
+
+.finishedButton {
+    -fx-background-color:lightgreen;
+    -fx-effect: null;
+    -fx-translate-x:5;
+    -fx-translate-y:5;
+    -fx-background-insets: 1 1 1 1;
 }
 
 .sideButton {
@@ -19,6 +27,14 @@
     -fx-border-width: 5px;
     -fx-background-insets: 2 2 2 2;
     -fx-effect: dropshadow(three-pass-box, black, 4, 1, 2, 4);
+}
+
+.sideButton:pressed {
+    -fx-background-color:white;
+    -fx-effect: null;
+    -fx-translate-x:5;
+    -fx-translate-y:5;
+    -fx-background-insets: 1 1 1 1;
 }
 
 .toggledButton {

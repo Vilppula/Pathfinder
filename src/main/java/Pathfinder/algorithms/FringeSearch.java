@@ -16,7 +16,6 @@ public class FringeSearch implements Calculable {
     private Deque<Graphnode> now;
     private Deque<Graphnode> later;
     private int treshold;
-    private boolean found;
     
     public FringeSearch(GraphBuilder builder, Solver solver) {
         this.builder = builder;
@@ -99,5 +98,12 @@ public class FringeSearch implements Calculable {
      */
     public void addNode(Graphnode node) {
         solver.addFringeSearchNode(node);
+    }
+    
+    /**
+     * Raportoidaan muistissa olevien listojen koko. Now + Later
+     */
+    public void reportSize() {
+        solver.observer.saveSize(this, now, later);
     }
 }

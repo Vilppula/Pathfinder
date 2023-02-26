@@ -46,6 +46,15 @@
                         </ImageView>
                      </graphic>
                   </Button>
+                  <Button fx:id="statisticButton" layoutX="25.0" layoutY="253.0" mnemonicParsing="false" styleClass="sideButton">
+                     <graphic>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../statistics.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children>
                <padding>
                   <Insets left="10.0" top="100.0" />
@@ -55,7 +64,10 @@
                <children>
                   <HBox fx:id="buttonbar" alignment="CENTER" spacing="30.0">
                      <children>
-                        <Button fx:id="dijkstra" mnemonicParsing="false" onAction="#dijkstra" styleClass="topbutton" stylesheets="@../styles/style.css" text="Dijkstra" />
+                        <Button fx:id="dijkstra" mnemonicParsing="false" onAction="#dijkstra" styleClass="topbutton" stylesheets="@../styles/style.css" text="Dijkstra">
+                           <font>
+                              <Font name="Britannic Bold" size="16.0" />
+                           </font></Button>
                         <Button fx:id="aStar" layoutX="420.0" layoutY="10.0" mnemonicParsing="false" onAction="#aStar" styleClass="topbutton" stylesheets="@../styles/style.css" text="A*" />
                         <Button fx:id="fringeSearch" layoutX="475.0" layoutY="10.0" mnemonicParsing="false" onAction="#fringeSearch" styleClass="topbutton" stylesheets="@../styles/style.css" text="Fringe Search" />
                         <Button fx:id="solveButton" layoutX="470.0" layoutY="10.0" mnemonicParsing="false" onAction="#solve" stylesheets="@../styles/style.css" text="SOLVE">
@@ -87,7 +99,7 @@
                   </ScrollPane>
                   <Label fx:id="coordinates" text="Koordinaaatit">
                      <font>
-                        <Font size="25.0" />
+                        <Font name="Candara Bold" size="25.0" />
                      </font>
                   </Label>
                </children>

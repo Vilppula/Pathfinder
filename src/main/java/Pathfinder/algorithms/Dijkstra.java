@@ -13,7 +13,7 @@ public class Dijkstra implements Calculable {
     private GraphBuilder builder;
     protected Solver solver;
     protected PriorityQueue<int[]> q;     //Jonossa kolmikoita (distance, y, x), jotka kertovat lasketun et‰isyyden kuhunkin koordinaattiin.
-    private int actionNumber;
+    private int actionNumber;             //T‰m‰ toimii j‰rjestysnumeroinnissa
     
     /**
      * Dijkstran konstruktori. Verkko annetaan parametrina.
@@ -91,5 +91,12 @@ public class Dijkstra implements Calculable {
      */
     public void addNode(Graphnode node) {
         solver.addDijkstraNode(node);   
+    }
+    
+    /**
+     * Pyyt‰‰ solveria merkitsem‰‰n algoritmin tilanvarauksen (prioriteettijono/pino)
+     */
+    public void reportSize() {
+        solver.observer.saveSize(this, q);
     }
 }

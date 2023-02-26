@@ -6,10 +6,12 @@ import Pathfinder.domain.Graphnode;
  * Rajapinta reitinhakualgoritmeille.
  * @author lasse
  */
-public interface Calculable {
+public interface Calculable <T>{
 
 
     public boolean calculate(int ay, int ax, int by, int bx);
     
-    public boolean adjust(Graphnode next, int newVal);
+    boolean adjust(Graphnode next, int newVal);
+    
+    public void reportSize();
 }

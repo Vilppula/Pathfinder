@@ -2,6 +2,7 @@ package Pathfinder.algorithms;
 
 import Pathfinder.domain.Graphnode;
 import Pathfinder.utility.GraphBuilder;
+import Pathfinder.utility.Observer;
 import Pathfinder.utility.Settings;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ public class DijkstraTest {
     
     Settings settings = new Settings();
     GraphBuilder builder = new GraphBuilder(settings);
-    Solver solver = new Solver(builder, settings);
+    Solver solver = new Solver(builder, settings, new Observer());
     Calculable algorithm = new Dijkstra(builder, solver);
     int[][] map = new int[][]{
             {0,0,0,0,0,0,1,0},
