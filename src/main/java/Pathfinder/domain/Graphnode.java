@@ -19,10 +19,12 @@ public class Graphnode {
     private int distance;       //Laskettu paras et‰isyys t‰lle solmulle
     private int HDistance;      //Heuristinen et‰isyys t‰lle solmulle
     private int inQ;            //T‰m‰ luku kertoo montako kertaa t‰m‰ solmu esiintyy jonossa
+    private int maxInQ;         
     private Graphnode previous; //Viite edelt‰v‰‰n solmuun lyhyimm‰ll‰ reitill‰.
-    private List<Integer> inListValues;    //T‰m‰ luku kertoo vuoronumeron jolla t‰m‰ solmu lis‰ttiin jonoon.
-    private List<Integer> expandedValues;  //T‰m‰ luku kertoo vuoronumeron jolla t‰m‰ solmu k‰siteltiin.
+    private List<Long> visitTimes;    //T‰m‰ luku kertoo ajan jolloin t‰ss‰ solmussa vierailtiin
+    private List<Long> expansionTimes;  //T‰m‰ luku kertoo ajan jolloin t‰m‰ solmu k‰siteltiin.
     private int expansions;     //T‰m‰ luku kertoo kuinka monta kertaa t‰m‰ solmu k‰siteltiin (Fringe Search)
+    private int visits;         //Montako kertaa solmussa vierailtiin
     
     /**
      * Luo uuden verkon solmun. Tarvitsee koordinaatit, jotka ovat suhteellisia
@@ -39,14 +41,19 @@ public class Graphnode {
         reset();
     }
     
+    /**
+     * Nollataan solmu.
+     */
     public void reset() {
         this.expansions = 0;
         this.expanded = false;
-        this.distance = Settings.maxInt;  //Korjataan maksimiarvoa ettei kokonaisluvuilla laskeminen vie arvoa yli maksimin
+        this.distance = Settings.maxInt;  //K‰ytet‰‰n omaa maksimiarvoa ettei kokonaisluvuilla laskeminen vie arvoa yli kokonaislukumaksimin
         this.inQ = 0;
-        this.inListValues = new ArrayList<>();
-        this.expandedValues = new ArrayList<>();
+        this.visitTimes = new ArrayList<>();
+        this.expansionTimes = new ArrayList<>();
         this.previous = null;
+        this.visits = 0;
+        this.maxInQ = 0;
     }
     
     public void addNeighbor(Graphnode neighbor) {
@@ -61,11 +68,6 @@ public class Graphnode {
         this.HDistance = hDistance;
     }
 
-    public void setExpanded() {
-        this.expanded = true;
-        this.expansions++;
-    }
-    
     public void notExpanded() {
         this.expanded = false;
     }
@@ -74,19 +76,23 @@ public class Graphnode {
         this.previous = previous;
     }
 
-    public void addInListValue(int inListValue) {
-        this.inListValues.add(inListValue);
+    public void addVisit(Long time) {
+        this.visitTimes.add(time);
+        this.visits++;
     }
 
-    public void addExpandedValue(int expandedValue) {
-        this.expandedValues.add(expandedValue);
+    public void addExpansion(Long time) {
+        this.expanded = true;
+        this.expansionTimes.add(time);
+        this.expansions++;
     }
     
-    public void isInQ() {
+    public void addInQ() {
         this.inQ++;
+        this.maxInQ = Math.max(maxInQ, inQ);
     }
     
-    public void notInQ() {
+    public void takeFromQ() {
         this.inQ--;
     }
     
@@ -126,12 +132,24 @@ public class Graphnode {
         return previous;
     }
 
-    public List<Integer> getInListValues() {
-        return inListValues;
+    public List<Long> getInListValues() {
+        return visitTimes;
     }
 
-    public List<Integer> getExpandedValues() {
-        return expandedValues;
+    public List<Long> getExpandedValues() {
+        return expansionTimes;
+    }
+
+    public int getMaxInQ() {
+        return maxInQ;
+    }
+
+    public int getVisits() {
+        return visits;
+    }
+
+    public int getExpansions() {
+        return expansions;
     }
     
     @Override

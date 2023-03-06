@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * T‰m‰ luokan metodit tarjoavat p‰‰n‰kym‰n kontrollero-luokalle 
- * rajapinnan algoritmeihin. Luokka huolehtii myˆs statistiikan ker‰‰misest‰.
+ * rajapinnan algoritmeihin.
  * @author lasse
  */
 public class Solver {
@@ -18,24 +18,18 @@ public class Solver {
     private AStar aStar;
     private FringeSearch fringe;
     private GraphBuilder builder;
-    private Settings settings;
+    public Settings settings;
     private int ax, ay, bx, by;
     private List<Calculable> algorithms;
-    private List<Graphnode> dijkstraNodes;
-    private List<Graphnode> aStarNodes;
-    private List<Graphnode> fringeSearchNodes;
     public Observer observer;
 
-
+    
     public Solver(GraphBuilder builder, Settings settings, Observer observer) {
         this.dijkstra = new Dijkstra(builder, this);
         this.aStar = new AStar(builder, this);
         this.fringe = new FringeSearch(builder, this);
         this.builder = builder;
         this.settings = settings;
-        this.dijkstraNodes = new ArrayList<>();
-        this.aStarNodes = new ArrayList<>();
-        this.fringeSearchNodes = new ArrayList<>();
         this.algorithms = new ArrayList<>();
         this.observer = observer;
         ax = ay = bx = by = -1;
@@ -47,6 +41,7 @@ public class Solver {
     public void dijkstra() {
         if (algorithms.contains(dijkstra)) {
             algorithms.remove(dijkstra);
+            observer.clear(dijkstra);
         } else {
             algorithms.add(dijkstra);
         }
@@ -58,6 +53,7 @@ public class Solver {
     public void aStar() {
         if (algorithms.contains(aStar)) {
             algorithms.remove(aStar);
+            observer.clear(aStar);
         } else {
             algorithms.add(aStar);
         }
@@ -69,6 +65,7 @@ public class Solver {
     public void fringeSearch() {
         if (algorithms.contains(fringe)) {
             algorithms.remove(fringe);
+            observer.clear(fringe);
         } else {
             algorithms.add(fringe);
         }
@@ -107,9 +104,6 @@ public class Solver {
      */
     public boolean solve() {
         boolean success = false;
-        this.dijkstraNodes = new ArrayList<>();
-        this.aStarNodes = new ArrayList<>();
-        this.fringeSearchNodes = new ArrayList<>();
         if (ax == -1 || ay == -1 || by == -1 || bx == -1) {
             return false;
         }
@@ -124,35 +118,6 @@ public class Solver {
     }
 
     //==========================================================================
-    /**
-     * Lis‰t‰‰n solmuja listalle niiden k‰sittelyj‰rjestyksess‰. T‰m‰n avulla
-     * visualisointi voidaan tehd‰ vastaavassa j‰rjestyksess‰.
-     * @param node 
-     */
-    public void addDijkstraNode(Graphnode node) {
-        this.dijkstraNodes.add(node);
-    }
-    
-    /**
-     * Lis‰t‰‰n A*:n k‰sittelemi‰ solmuja listalle niiden k‰sittely
-     * j‰rjestyksess‰.
-     * @param node 
-     */
-    public void addAStarNode(Graphnode node) {
-        this.aStarNodes.add(node);
-    }
-    
-    /**
-     * Koska Fringe Searchin iteraatiot saattavat vierailla samassa solmussa
-     * monta kertaa, lis‰t‰‰n listalle null arvo erottamaan 'somurintamat'
-     * toisistaan.
-     * @param fringe 
-     */
-    public void addFringeSearchNode(Graphnode node) {
-        this.fringeSearchNodes.add(node);
-    }
-    
-    //==========================================================================
     public int getBx() {
         return bx;
     }
@@ -162,14 +127,18 @@ public class Solver {
     }
 
     public List<Graphnode> getDijkstraNodes() {
-        return dijkstraNodes;
+        return observer.getExpandedNodes(this.dijkstra);
     }
     
     public List<Graphnode> getAStarNodes() {
-        return aStarNodes;
+        return observer.getExpandedNodes(this.aStar);
     }
 
     public List<Graphnode> getFringeSearchNodes() {
-        return fringeSearchNodes;
+        return observer.getExpandedNodes(this.fringe);
+    }
+
+    public List<Calculable> getAlgorithms() {
+        return algorithms;
     }
 }

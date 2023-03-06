@@ -1,5 +1,7 @@
 package Pathfinder.controllers;
 
+import Pathfinder.Main;
+import Pathfinder.algorithms.Calculable;
 import Pathfinder.algorithms.Solver;
 import Pathfinder.utility.Visualizer;
 import Pathfinder.utility.GraphBuilder;
@@ -7,12 +9,17 @@ import Pathfinder.utility.MapHandler;
 import Pathfinder.utility.Observer;
 import Pathfinder.utility.Settings;
 import Pathfinder.utility.Settings.Heuristic;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.ImageCursor;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,6 +27,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 /**
  * P‰‰n‰kym‰n kontrolleriluokka.
@@ -60,6 +68,25 @@ public class MainviewController implements Initializable {
         this.graph = graph;
         this.settings = settings;
         
+    }
+    
+    public void openStatistics() {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/statistics.fxml"));
+        StatisticsController statC = new StatisticsController(observer);
+        loader.setController(statC);
+        Scene scene;
+        try {
+            scene = new Scene(loader.load());
+        } catch (IOException ex) {
+            Logger.getLogger(MainviewController.class.getName()).log(Level.SEVERE, null, ex);
+            return;
+        }
+        Stage second = new Stage();
+        second.setScene(scene);
+        second.show();
+        for (Calculable c: solver.getAlgorithms()) {
+            statC.addRow(c);
+        }
     }
     
     /**
@@ -217,7 +244,7 @@ public class MainviewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         settings = new Settings();                          //Luo asetukset
         graph = new GraphBuilder(settings);                 //Luo verkon rakentaja
-        observer = new Observer();                          //Luo uusi statistiikka
+        observer = new Observer(settings, graph);                  //Luo uusi statistiikka
         solver = new Solver(graph, settings, observer);     //Luo reitinratkaisija
         visualizer = new Visualizer(this);                  //Luo piirt‰j‰
         mapHandler = new MapHandler();

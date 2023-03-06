@@ -1,4 +1,27 @@
-.tableField {
-    -fx-border-width: 2 2 2 0;
-    -fx-border-color: 2;
+.label {
+    -fx-font-family: 'Consolas';
+    -fx-font-size:14;
+}
+
+.toggleButton {
+    -fx-font-family: 'Britannic Bold';
+    -fx-font-size:14;
+    -fx-pref-height: 30;
+    -fx-pref-width: 95;
+    -fx-background-insets: 2 2 2 2;
+    -fx-effect: dropshadow(three-pass-box, black, 3, 1, 2, 3);
+}
+
+.toggleButton:selected {
+    -fx-background-color:#99ffff;
+    -fx-effect: null;
+    -fx-border-width: 2;
+    -fx-border-color:#000000;
+    -fx-translate-x:3;
+    -fx-translate-y:3;
+    -fx-background-insets: 1 1 1 1;
+}
+
+.table-row-cell {
+    -fx-cell-size: 150px;
 }

@@ -46,7 +46,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
-                  <Button fx:id="statisticButton" layoutX="25.0" layoutY="253.0" mnemonicParsing="false" styleClass="sideButton">
+                  <Button fx:id="statisticButton" layoutX="25.0" layoutY="253.0" mnemonicParsing="false" onAction="#openStatistics" styleClass="sideButton">
                      <graphic>
                         <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
                            <image>

@@ -217,4 +217,14 @@ public class GraphBuilder {
     public boolean isPassable(double y, double x) {
         return map[(int) y][(int) x] == 0;
     }
+
+    /**
+     * Palauttaa koko verkon kaksiulotteisena taulukkona
+     * @return 
+     */
+    public Graphnode[][] getNodemap() {
+        return nodemap;
+    }
+    
+    
 }

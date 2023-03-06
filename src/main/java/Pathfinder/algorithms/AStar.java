@@ -27,15 +27,8 @@ public class AStar extends Dijkstra {
         int ny = next.getY();
         int nx = next.getX();
         super.q.add(new int[]{newDist+next.getHDistance(), ny, nx});            //f(x) = g(x) + h(x) (erona dijkstraan, jossa f(x) = g(x))
+        super.reportSize();
+        next.addInQ();
         return true;
-    }
-    
-    /**
-     * Lis‰‰ solmun solverin AStar listaan (A*:n tarkastellut solmut tarkasteluj‰rjestyksess‰)
-     * @param node 
-     */
-    @Override
-    public void addNode(Graphnode node) {
-        solver.addAStarNode(node);
     }
 }

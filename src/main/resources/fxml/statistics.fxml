@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <bottom>
+      <GridPane fx:id="table" alignment="CENTER" gridLinesVisible="true" stylesheets="@../styles/statistics.css" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+      </GridPane>
+   </bottom>
+   <top>
+      <HBox alignment="CENTER" prefHeight="50.0" prefWidth="200.0" spacing="20.0" stylesheets="@../styles/statistics.css" BorderPane.alignment="CENTER">
+         <children>
+            <ToggleButton fx:id="queueSize" mnemonicParsing="false" styleClass="toggleButton" text="Queue Size" />
+            <ToggleButton fx:id="avgQueue" layoutX="363.0" layoutY="20.0" mnemonicParsing="false" styleClass="toggleButton" text="Avg. Queue" />
+            <ToggleButton fx:id="expansions" layoutX="420.0" layoutY="20.0" mnemonicParsing="false" styleClass="toggleButton" text="Expansions" />
+            <ToggleButton fx:id="avgExpansions" layoutX="478.0" layoutY="20.0" mnemonicParsing="false" styleClass="toggleButton" text="Avg. Exp." />
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <StackPane fx:id="chartView" prefHeight="400.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>

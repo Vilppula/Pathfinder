@@ -32,49 +32,66 @@ public class FringeSearch implements Calculable {
      */
     @Override
     public boolean calculate(int ay, int ax, int by, int bx) {
+        
+        // Alustetaan =============================
         this.now = new ArrayDeque<>();
         this.later = new ArrayDeque<>();
         Graphnode root = builder.getGraphnode(ay, ax);
         treshold = root.getHDistance();                                         //Ensimm‰isen iteraation raja-arvoksi tulee l‰htˆsolmun heuristinen et‰isyys maalisolmusta..
         root.setDistance(0);                                                    //Alkusomun et‰isyys on 0
         now.add(root);
-        root.isInQ();
+        root.addInQ();
+        boolean found = false;
         
+        // Algoritmin l‰pik‰ynti ======================
         while (!now.isEmpty()) {
             int newTreshold = Integer.MAX_VALUE;                                //Talletetaan uusi totuudenmukaisempi raja-arvo t‰h‰n muuttujaan.
-            addNode(null);                                                      //Lis‰t‰‰n null merkiksi uuden iteraation alkamisesta. T‰m‰ on visualisoinnin kannalta parasta.
+            solver.observer.addAsExpanded(this, null);                          //Lis‰t‰‰n null merkiksi uuden iteraation alkamisesta. T‰m‰ on visualisoinnin kannalta parasta.
+            
+            // Iteraation alku ============================
             while (!now.isEmpty()) {                                            //Niin kauan kuin jonossa 'now' on solmuja, k‰yd‰‰n ne l‰pi
-                Graphnode head = now.poll();
-                addNode(head);
-                if (head.getY() == by && head.getX() == bx) {                   //Tarkasta onko maalisolmu
-                    return true;
-                }
+                Graphnode head = now.peek();
                 int f = head.getDistance() + head.getHDistance();               //Arvo f on summa 'solmun head et‰isyys l‰htˆsolmusta + heuristinen et‰isyys maaliin'.
                 if (f > treshold) {                                             //Jos solmun f-arvo ylitt‰‰ raja-arvon, siirr‰ listalle 'later'...
                     later.add(head);
                     newTreshold = Math.min(newTreshold, f);
+                    now.poll();
                     continue;
                 }
-                addNode(head);                                                  //...muuten lis‰t‰‰n solmu 'head' k‰sitteltyjen listalle...
+                if (head.getY() == by && head.getX() == bx) {                   //Tarkasta onko maalisolmu
+                    found = true;
+                    break;
+                }
+                solver.observer.addAsExpanded(this, head);                      //...muuten lis‰t‰‰n solmu 'head' k‰sitteltyjen listalle...
+                head.addExpansion(System.nanoTime());
                 for (Graphnode next: head.getNeighbors()) {                     //...k‰yd‰‰n l‰pi sen naapurit...
-                    if (next == head.getPrevious()) {
+                    if (next == head.getPrevious()) {                           //...ei palata edelt‰j‰solmuun...
                         continue;
                     }
+                    next.addVisit(System.nanoTime());
                     int newDist = head.getDistance() +                          //...lasketaan uusi et‰isyys naapurisolmulle solmun 'head' kautta...
                             (next.getX() != head.getX()
                                 && next.getY() != head.getY() ? 141 : 100);
-                    if (adjust(next, newDist)) {                                //...yritet‰‰n muuttaa naapurin et‰isyysarvoa...
-                        now.add(next);                                          //...ja jos se onnistuu, lis‰t‰‰n naapuri listalle 'now'...
-                        next.isInQ();
-                        next.setPrevious(head);                                 //...merkit‰‰n naapurin edelt‰j‰ksi solmu 'head'
+                    if (!adjust(next, newDist)) {                                //...yritet‰‰n muuttaa naapurin et‰isyysarvoa...
+                        continue;
                     }
+                    //now.remove(next); 
+                    now.add(next);                                              //...ja jos se onnistuu, lis‰t‰‰n naapuri listalle 'now'...
+                    reportSize();
+                    next.addInQ();
+                    next.setPrevious(head);                                     //...merkit‰‰n naapurin edelt‰j‰ksi solmu 'head'
+                    
                 }
+                now.poll();
             }
-            while (!later.isEmpty()) {
-                now.add(later.poll());
+            if (found) {
+                return true;
             }
             treshold = newTreshold;                                             //P‰ivitet‰‰n raja-arvo vastaamaan parasta lˆydetty‰ f-arvoa
+            now = later;
+            later = new ArrayDeque();
         }
+        
         return false;
     }
     
@@ -92,18 +109,11 @@ public class FringeSearch implements Calculable {
         return true;
     }
     
-    /**
-     * Lis‰‰ solmun solverin FringeSearchNodes-listalle. Solmut tulevat listalle k‰sittelyj‰rjestyksess‰.
-     * @param node 
-     */
-    public void addNode(Graphnode node) {
-        solver.addFringeSearchNode(node);
-    }
     
     /**
-     * Raportoidaan muistissa olevien listojen koko. Now + Later
+     * Raportoidaan muistissa olevien listojen koko. Now + Later.
      */
     public void reportSize() {
-        solver.observer.saveSize(this, now, later);
+        solver.observer.saveSize(this, now);
     }
 }
