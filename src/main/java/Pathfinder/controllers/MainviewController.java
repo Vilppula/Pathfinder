@@ -248,7 +248,8 @@ public class MainviewController implements Initializable {
         solver = new Solver(graph, settings, observer);     //Luo reitinratkaisija
         visualizer = new Visualizer(this);                  //Luo piirtäjä
         mapHandler = new MapHandler();
-        changeMap(new Image("/testMap.jpg"));
+        //changeMap(new Image("/testMap.jpg"));
+        changeMap(new Image("/Maze1.png"));
         cursor = cursorA;
         map.setCursor(cursor);
         mapImage.setImage(mapHandler.getOriginal());

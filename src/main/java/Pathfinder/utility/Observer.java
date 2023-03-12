@@ -2,6 +2,7 @@ package Pathfinder.utility;
 
 import Pathfinder.domain.Graphnode;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ public class Observer {
      * tietorakenteet alustetaan.
      */
     public void start(Object o) {
+        System.out.println("K‰ynnistet‰‰n "+o.getClass());
         stepCounters.put(o.getClass(),0);
         qSizes.put(o.getClass(), new ArrayList<>());
         expandedNodes.put(o.getClass(), new ArrayList());
@@ -47,6 +49,7 @@ public class Observer {
         expansions.put(o.getClass(), new ArrayList<>());
         visits.put(o.getClass(), new ArrayList<>());
         durations.put(o.getClass(), new Long[]{System.nanoTime(),(long) 0});
+        maxExpansions.put(o.getClass(), 0);
     }
     
     /**
@@ -64,8 +67,14 @@ public class Observer {
                 }
             }
         }
-        maxExpansions.put(o.getClass(), seenNodes.stream()
-                .map(n -> n.getExpansions()).max(Integer::compare).get());
+        
+        for (Graphnode node: expandedNodes.get(o.getClass())) {
+            if (node == null) {
+                continue;
+            }
+            maxExpansions.put(o.getClass(), Math.max(node.getExpansions(), maxExpansions.getOrDefault(o.getClass(), 0)));
+        }
+                
         totalVisits.put(o.getClass(), seenNodes.stream()
                 .map(n -> n.getVisits())
                 .reduce(0, (v1, v2) -> v1 + v2)

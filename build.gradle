@@ -36,6 +36,7 @@ jacocoTestReport {
                 "Pathfinder/controllers/*.*",
                 "Pathfinder/utility/Map*.*",
                 "Pathfinder/utility/Vis*.*",
+                "Pathfinder/utility/Chart*.*",
                 "Pathfinder/domain/Node*.*"
             ])
         }))

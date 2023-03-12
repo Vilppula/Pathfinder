@@ -41,7 +41,7 @@ public class SolverTest {
     
     @BeforeEach
     public void setUp() {
-        solver = new Solver(builder, settings, new Observer());
+        solver = new Solver(builder, settings, new Observer(settings, builder));
         builder.loadMap(map);
     }
     

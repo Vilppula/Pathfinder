@@ -5,7 +5,6 @@ import Pathfinder.algorithms.Calculable;
 import Pathfinder.algorithms.FringeSearch;
 import Pathfinder.utility.ChartDraw;
 import Pathfinder.utility.Observer;
-import Pathfinder.utility.Settings;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +16,6 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.chart.Chart;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.GridPane;
@@ -74,7 +72,7 @@ public class StatisticsController implements Initializable  {
     }
     
     /**
-     * Lis‰t‰‰n uusi rivi taulukkoon (gridpane)
+     * Lis‰t‰‰n uusi rivi taulukkoon (gridpane).
      * @param observer 
      */
     public void addRow(Calculable c){
@@ -91,7 +89,12 @@ public class StatisticsController implements Initializable  {
         table.addRow(table.getRowCount(), nodes);
     }
     
-    
+    /**
+     * Luo uuden taulukon solun
+     * @param node
+     * @param pos
+     * @return 
+     */
     public HBox getCell(Node node, Pos pos) {
         HBox box = new HBox();
         box.getChildren().add(node);
@@ -115,7 +118,6 @@ public class StatisticsController implements Initializable  {
         }
         chosenChart = charts.get(i);
         chosenChart.setVisible(true);
-        System.out.println("ASetetaan diagrammi "+chosenChart+" n‰kyv‰ksi");
         chosenButton = buttons.get(i);
     }
 }

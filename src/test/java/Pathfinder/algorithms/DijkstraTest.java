@@ -4,12 +4,10 @@ import Pathfinder.domain.Graphnode;
 import Pathfinder.utility.GraphBuilder;
 import Pathfinder.utility.Observer;
 import Pathfinder.utility.Settings;
-import java.util.ArrayList;
 import java.util.List;
+import javafx.util.Pair;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +19,8 @@ public class DijkstraTest {
     
     Settings settings = new Settings();
     GraphBuilder builder = new GraphBuilder(settings);
-    Solver solver = new Solver(builder, settings, new Observer());
+    Observer observer = new Observer(settings, builder);
+    Solver solver = new Solver(builder, settings, observer);
     Calculable algorithm = new Dijkstra(builder, solver);
     int[][] map = new int[][]{
             {0,0,0,0,0,0,1,0},
@@ -33,6 +32,7 @@ public class DijkstraTest {
     @BeforeEach
     public void reset() {
         builder.loadMap(map);
+        observer.start(algorithm);
     }
     
     @Test
@@ -97,4 +97,13 @@ public class DijkstraTest {
         algorithm.calculate(0, 0, 2, 6);
         assertTrue(algorithm.adjust(builder.getGraphnode(1, 0), 90));
     }
+    
+    @AfterEach
+    public void stop() {
+        observer.stop(algorithm);
+    }
+    
+    
+    
+    
 }
